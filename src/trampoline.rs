@@ -1,8 +1,4 @@
-
-use std::{
-    mem::size_of_val,
-    ptr::null_mut,
-};
+use std::{mem::size_of_val, ptr::null_mut};
 
 use winapi::{
     ctypes::c_void,
@@ -44,7 +40,6 @@ impl Trampoline {
             null_mut(),
         );
         self.next += instructions.len() as isize;
-        println!("{:?}", self.code.offset(self.next));
         self
     }
 
@@ -63,7 +58,6 @@ impl Trampoline {
             null_mut(),
         );
         self.next += 5;
-        println!("{:?}", self.code.offset(self.next));
         self
     }
 
@@ -82,12 +76,10 @@ impl Trampoline {
             null_mut(),
         );
         self.next += 5;
-        println!("{:?}", self.code.offset(self.next));
         self
     }
 
     pub unsafe fn inject(&self, address: u32) {
-        println!("inject");
         let mut patch = [0u8; 5];
         patch[0] = 0xE9;
         LE::write_i32(&mut patch[1..], self.code as i32 - (address as i32 + 5));
