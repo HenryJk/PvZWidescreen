@@ -8,3 +8,4 @@ edition = "2021"
 ntapi = "0.3.6"
 winapi = { version = "0.3.9", features = ["memoryapi"] }
 byteorder = "1.4.3"
+iced-x86 = { version = "1.16.0", features = ["code_asm"]}
