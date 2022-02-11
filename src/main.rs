@@ -1,27 +1,23 @@
 mod memory;
+mod patch_obstruction;
 
-use byteorder::{ByteOrder, LE};
 use iced_x86::code_asm::*;
 use memory::patch;
+use patch_obstruction::patch_obstruction;
 
 use core::intrinsics::transmute;
 
 use std::{
     error::Error,
-    mem::size_of_val,
     os::windows::{prelude::AsRawHandle, process::CommandExt},
     process::Command,
     ptr::null_mut,
 };
 
 use ntapi::ntpsapi::NtResumeProcess;
-use winapi::{
-    ctypes::c_void,
-    um::{
-        memoryapi::{VirtualAllocEx, WriteProcessMemory},
-        winnt::{MEM_COMMIT, PAGE_EXECUTE_READWRITE},
-    },
-};
+use winapi::ctypes::c_void;
+
+use crate::memory::inject;
 
 const OLD_WIDTH_ADDRESS: [u32; 10] = [
     0x4011F8, 0x407672, 0x4415DA, 0x441908, 0x44193E, 0x44EC12, 0x450137, 0x45047D, 0x486A2C,
@@ -31,37 +27,6 @@ const OLD_WIDTH_ADDRESS: [u32; 10] = [
 const PAD: i16 = 133;
 
 static mut H_PROCESS: *mut c_void = null_mut();
-
-unsafe fn alloc_mem(size: usize, permission: u32) -> *mut c_void {
-    VirtualAllocEx(H_PROCESS, null_mut(), size, MEM_COMMIT, permission)
-}
-
-unsafe fn inject(address: u32, mut code: CodeAssembler) {
-    let exec_mem_address = alloc_mem(128, PAGE_EXECUTE_READWRITE);
-
-    let buf = code.assemble(exec_mem_address as u64).unwrap();
-    WriteProcessMemory(
-        H_PROCESS,
-        exec_mem_address,
-        buf.as_ptr() as *const c_void,
-        buf.len(),
-        null_mut(),
-    );
-
-    let mut patch = [0u8; 5];
-    patch[0] = 0xE9;
-    LE::write_i32(
-        &mut patch[1..],
-        exec_mem_address as i32 - (address as i32 + 5),
-    );
-    WriteProcessMemory(
-        H_PROCESS,
-        address as *mut c_void,
-        patch.as_ptr() as *const c_void,
-        size_of_val(&patch),
-        null_mut(),
-    );
-}
 
 fn main() -> Result<(), Box<dyn Error>> {
     let pvz_process = Command::new("PlantsVsZombies.exe")
@@ -357,6 +322,8 @@ fn main() -> Result<(), Box<dyn Error>> {
         code.add(eax, 160)?;
         code.jmp(0x41A976)?;
         inject(0x41A971, code);
+
+        patch_obstruction()?;
 
         // std::thread::sleep(std::time::Duration::from_secs(10));
         NtResumeProcess(h_process);
