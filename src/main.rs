@@ -2,7 +2,7 @@ mod memory;
 mod patch_obstruction;
 
 use iced_x86::code_asm::*;
-use memory::patch;
+use memory::{alloc_mem, patch};
 use patch_obstruction::patch_obstruction;
 
 use core::intrinsics::transmute;
@@ -15,7 +15,7 @@ use std::{
 };
 
 use ntapi::ntpsapi::NtResumeProcess;
-use winapi::ctypes::c_void;
+use winapi::{ctypes::c_void, um::winnt::PAGE_READWRITE};
 
 use crate::memory::inject;
 
@@ -27,15 +27,22 @@ const OLD_WIDTH_ADDRESS: [u32; 10] = [
 const PAD: i16 = 133;
 
 static mut H_PROCESS: *mut c_void = null_mut();
+static mut BG5_POLE_PTR: u32 = 0;
+static mut BG6_POLE_PTR: u32 = 0;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let pvz_process = Command::new("PlantsVsZombies.exe")
         .creation_flags(0x00000004)
         .spawn()
         .expect("PlantsVsZombies.exe not found");
-    let h_process = pvz_process.as_raw_handle() as *mut c_void;
+
     unsafe {
         H_PROCESS = pvz_process.as_raw_handle() as *mut c_void;
+        BG5_POLE_PTR = alloc_mem(12, PAGE_READWRITE) as u32;
+        patch(BG5_POLE_PTR + 0x4, &transmute::<u16, [u8; 2]>(673));
+        BG6_POLE_PTR = alloc_mem(12, PAGE_READWRITE) as u32;
+        patch(BG6_POLE_PTR + 0x4, &transmute::<u16, [u8; 2]>(673));
+
         for address in OLD_WIDTH_ADDRESS {
             patch(address, &transmute::<i16, [u8; 2]>(800 + 2 * PAD));
         }
@@ -65,8 +72,35 @@ fn main() -> Result<(), Box<dyn Error>> {
         code.jmp(0x43B8EC)?;
         inject(0x43B8E5, code);
 
+        // Move obstruction pole (CutScene::AnimateBoard)
+        let mut code = CodeAssembler::new(32)?;
+        code.push(0)?;
+        code.push(esi)?;
+        code.add(esi, esi)?;
+        code.add(esi, dword_ptr(esp))?;
+        code.add(esi, 1346 - 3 * PAD as i32)?;
+        code.sar(esi, 1)?;
+        code.mov(dword_ptr(BG5_POLE_PTR + 0x4), esi)?;
+        code.mov(dword_ptr(BG6_POLE_PTR + 0x4), esi)?;
+        code.mov(esi, dword_ptr(esp))?;
+        code.call(eax)?;
+        code.jmp(0x43B8FE)?;
+        inject(0x43B8F9, code);
+
         // Change right edge of Board from 1180 to 1180 + PAD (CutScene::AnimateBoard)
         patch(0x43B916, &transmute::<i16, [u8; 2]>(1180 + PAD));
+
+        // Move obstruction pole during camera paning (part 1) (CutScene::AnimateBoard)
+        let mut code = CodeAssembler::new(32)?;
+        code.add(eax, eax)?;
+        code.add(eax, dword_ptr(esp))?;
+        code.add(eax, 1346 - 3 * PAD as i32)?;
+        code.sar(eax, 1)?;
+        code.mov(dword_ptr(BG5_POLE_PTR + 0x4), eax)?;
+        code.mov(dword_ptr(BG6_POLE_PTR + 0x4), eax)?;
+        code.mov(eax, dword_ptr(edi + 0xa4))?;
+        code.jmp(0x43B93F)?;
+        inject(0x43B939, code);
 
         // Change SeedChooserScreen offset to PAD (CutScene::AnimateBoard)
         let mut code = CodeAssembler::new(32)?;
@@ -78,6 +112,20 @@ fn main() -> Result<(), Box<dyn Error>> {
 
         // Change right edge of Board from 1180 to 1180 + PAD (CutScene::AnimateBoard)
         patch(0x43BA53, &transmute::<i16, [u8; 2]>(1180 + PAD));
+
+        // Move obstruction pole during camera paning (part 2) (CutScene::AnimateBoard)
+        let mut code = CodeAssembler::new(32)?;
+        code.push(eax)?;
+        code.add(eax, eax)?;
+        code.add(eax, dword_ptr(esp))?;
+        code.add(eax, 1346 - 3 * PAD as i32)?;
+        code.sar(eax, 1)?;
+        code.mov(dword_ptr(BG5_POLE_PTR + 0x4), eax)?;
+        code.mov(dword_ptr(BG6_POLE_PTR + 0x4), eax)?;
+        code.mov(ecx, esi)?;
+        code.call(edx)?;
+        code.jmp(0x43BA79)?;
+        inject(0x43BA74, code);
 
         // Move menu button draw offset_x by PAD (SeedChooserScreen::Draw)
         let mut code = CodeAssembler::new(32)?;
@@ -92,6 +140,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 
         // Board starts with offset PAD (LawnApp::MakeNewBoard)
         let mut code = CodeAssembler::new(32)?;
+        code.mov(dword_ptr(BG5_POLE_PTR + 0x4), 673)?;
+        code.mov(dword_ptr(BG6_POLE_PTR + 0x4), 673)?;
         code.push(0)?;
         code.push(PAD as i32)?;
         code.mov(ecx, eax)?;
@@ -99,7 +149,12 @@ fn main() -> Result<(), Box<dyn Error>> {
         inject(0x44F65B, code);
 
         // Start level intro at 220 + PAD (CutScene::StartLevelIntro)
-        patch(0x43B012, &transmute::<i16, [u8; 2]>(220 + PAD));
+        let mut code = CodeAssembler::new(32)?;
+        code.push(220 + PAD as i32)?;
+        code.mov(dword_ptr(BG5_POLE_PTR + 0x4), 1003)?;
+        code.mov(dword_ptr(BG6_POLE_PTR + 0x4), 1003)?;
+        code.jmp(0x43B016)?;
+        inject(0x43B011, code);
 
         // Set SEED_BANK_OFFSET_X to PAD
         patch(0x6A9EAC, &transmute::<i16, [u8; 2]>(PAD));
@@ -177,6 +232,21 @@ fn main() -> Result<(), Box<dyn Error>> {
         code.jmp(0x484E4F)?;
         inject(0x484E4A, code);
 
+        // Update Obstruction Pole during view_lawn (start) (SeedChooserScreen::UpdateViewLawn)
+        let mut code = CodeAssembler::new(32)?;
+        code.push(eax)?;
+        code.add(eax, eax)?;
+        code.add(eax, dword_ptr(esp))?;
+        code.add(eax, 1346 - 3 * PAD as i32)?;
+        code.sar(eax, 1)?;
+        code.mov(dword_ptr(BG5_POLE_PTR + 0x4), eax)?;
+        code.mov(dword_ptr(BG6_POLE_PTR + 0x4), eax)?;
+        code.mov(eax, dword_ptr(esp))?;
+        code.mov(ecx, esi)?;
+        code.call(edx)?;
+        code.jmp(0x484E5F)?;
+        inject(0x484E5A, code);
+
         // min_x -= PAD, max_x += PAD during view_lawn (return) (SeedChooserScreen::UpdateViewLawn)
         let mut code = CodeAssembler::new(32)?;
         code.sub(dword_ptr(esp), PAD as i32)?;
@@ -184,6 +254,21 @@ fn main() -> Result<(), Box<dyn Error>> {
         code.call(0x511C40)?;
         code.jmp(0x484F3B)?;
         inject(0x484F36, code);
+
+        // Update Obstruction Pole during view_lawn (return) (SeedChooserScreen::UpdateViewLawn)
+        let mut code = CodeAssembler::new(32)?;
+        code.push(eax)?;
+        code.add(eax, eax)?;
+        code.add(eax, dword_ptr(esp))?;
+        code.add(eax, 1346 - 3 * PAD as i32)?;
+        code.sar(eax, 1)?;
+        code.mov(dword_ptr(BG5_POLE_PTR + 0x4), eax)?;
+        code.mov(dword_ptr(BG6_POLE_PTR + 0x4), eax)?;
+        code.mov(eax, dword_ptr(esp))?;
+        code.mov(ecx, esi)?;
+        code.call(edx)?;
+        code.jmp(0x484F4B)?;
+        inject(0x484F46, code);
 
         // Board->mX = PAD, SeedChooserScreen->mX = PAD during view_lawn (view) (SeedChooserScreen::UpdateViewLawn)
         let mut code = CodeAssembler::new(32)?;
@@ -326,7 +411,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         patch_obstruction()?;
 
         // std::thread::sleep(std::time::Duration::from_secs(10));
-        NtResumeProcess(h_process);
+        NtResumeProcess(H_PROCESS);
     }
     Ok(())
 }

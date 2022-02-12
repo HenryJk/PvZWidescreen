@@ -27,7 +27,7 @@ pub unsafe fn patch(address: u32, buf: &[u8]) {
 }
 
 pub unsafe fn inject(address: u32, mut code: CodeAssembler) {
-    let exec_mem_address = alloc_mem(128, PAGE_EXECUTE_READWRITE);
+    let exec_mem_address = alloc_mem(256, PAGE_EXECUTE_READWRITE);
 
     let buf = code.assemble(exec_mem_address as u64).unwrap();
     WriteProcessMemory(
