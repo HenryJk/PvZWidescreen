@@ -5,16 +5,16 @@ use winapi::um::winnt::PAGE_READWRITE;
 
 use crate::{
     memory::{alloc_mem, inject, patch},
-    BG5_POLE_PTR, BG6_POLE_PTR,
+    POLE_NIGHT_PTR, POLE_PTR,
 };
 
-pub unsafe fn patch_obstruction() -> Result<(), Box<dyn Error>> {
-    // Load IMAGE_BACKGROUND5_OBSTRUCTION_POLE (Sexy::ExtractDelayLoad_Background5Resources)
+pub unsafe fn patch_bush() -> Result<(), Box<dyn Error>> {
+    // Load IMAGE_POLE (Sexy::ExtractDelayLoad_Background5Resources)
     let storage_ptr = alloc_mem(0x100, PAGE_READWRITE) as u32;
-    const POLE5_NAME: &str = "IMAGE_BACKGROUND5_OBSTRUCTION_POLE";
-    patch(storage_ptr + 0x20, POLE5_NAME.as_bytes());
+    const POLE_NAME: &str = "IMAGE_POLE";
+    patch(storage_ptr + 0x20, POLE_NAME.as_bytes());
     let mut code = CodeAssembler::new(32)?;
-    code.push(POLE5_NAME.len() as u32)?;
+    code.push(POLE_NAME.len() as u32)?;
     code.push(storage_ptr + 0x20)?;
     code.mov(ecx, storage_ptr)?;
     code.mov(dword_ptr(storage_ptr + 0x18), 0xf)?;
@@ -30,19 +30,19 @@ pub unsafe fn patch_obstruction() -> Result<(), Box<dyn Error>> {
     code.mov(ecx, eax)?;
     code.call(0x59A990)?;
     code.mov(esi, storage_ptr + 0x80)?;
-    code.mov(dword_ptr(BG5_POLE_PTR), eax)?;
+    code.mov(dword_ptr(POLE_PTR), eax)?;
     code.call(0x59A8D0)?;
     code.mov(al, 1)?;
     code.mov(ecx, dword_ptr(ebp - 0xC))?;
     code.jmp(0x475925)?;
     inject(0x475920, code);
 
-    // Load IMAGE_BACKGROUND6_OBSTRUCTION_POLE (Sexy::ExtractDelayLoad_Background6Resources)
+    // Load IMAGE_POLE_NIGHT (Sexy::ExtractDelayLoad_Background6Resources)
     let storage_ptr = alloc_mem(0x100, PAGE_READWRITE) as u32;
-    const OBSTRUCTION_POLE6_NAME: &str = "IMAGE_BACKGROUND6_OBSTRUCTION_POLE";
-    patch(storage_ptr + 0x20, OBSTRUCTION_POLE6_NAME.as_bytes());
+    const POLE_NIGHT_NAME: &str = "IMAGE_POLE_NIGHT";
+    patch(storage_ptr + 0x20, POLE_NIGHT_NAME.as_bytes());
     let mut code = CodeAssembler::new(32)?;
-    code.push(OBSTRUCTION_POLE6_NAME.len() as u32)?;
+    code.push(POLE_NIGHT_NAME.len() as u32)?;
     code.push(storage_ptr + 0x20)?;
     code.mov(ecx, storage_ptr)?;
     code.mov(dword_ptr(storage_ptr + 0x18), 0xf)?;
@@ -58,7 +58,7 @@ pub unsafe fn patch_obstruction() -> Result<(), Box<dyn Error>> {
     code.mov(ecx, eax)?;
     code.call(0x59A990)?;
     code.mov(esi, storage_ptr + 0x80)?;
-    code.mov(dword_ptr(BG6_POLE_PTR), eax)?;
+    code.mov(dword_ptr(POLE_NIGHT_PTR), eax)?;
     code.call(0x59A8D0)?;
     code.mov(al, 1)?;
     code.mov(ecx, dword_ptr(ebp - 0xC))?;
@@ -82,7 +82,7 @@ pub unsafe fn patch_obstruction() -> Result<(), Box<dyn Error>> {
     code.mov(esi, dword_ptr(esp + 0x4))?;
     code.mov(dword_ptr(esi), 0x19)?;
     code.mov(dword_ptr(esi + 0x4), 400_001)?;
-    code.mov(dword_ptr(esi + 0x8), BG5_POLE_PTR)?;
+    code.mov(dword_ptr(esi + 0x8), POLE_PTR)?;
     code.add(dword_ptr(esp + 0x4), 0xC)?;
     code.add(dword_ptr(esp + 0x8), 1)?;
     code.add(esi, 0xC)?;
@@ -93,7 +93,7 @@ pub unsafe fn patch_obstruction() -> Result<(), Box<dyn Error>> {
     code.mov(esi, dword_ptr(esp + 0x4))?;
     code.mov(dword_ptr(esi), 0x19)?;
     code.mov(dword_ptr(esi + 0x4), 400_001)?;
-    code.mov(dword_ptr(esi + 0x8), BG6_POLE_PTR)?;
+    code.mov(dword_ptr(esi + 0x8), POLE_NIGHT_PTR)?;
     code.add(dword_ptr(esp + 0x4), 0xC)?;
     code.add(dword_ptr(esp + 0x8), 1)?;
     code.add(esi, 0xC)?;

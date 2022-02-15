@@ -1,9 +1,15 @@
 mod memory;
-mod patch_obstruction;
+mod patch_almanac;
+mod patch_bush;
+mod patch_challenge;
+mod patch_store;
 
 use iced_x86::code_asm::*;
 use memory::{alloc_mem, patch};
-use patch_obstruction::patch_obstruction;
+use patch_almanac::patch_almanac;
+use patch_bush::patch_bush;
+use patch_challenge::patch_challenge;
+use patch_store::patch_store;
 
 use core::intrinsics::transmute;
 
@@ -17,7 +23,7 @@ use std::{
 use ntapi::ntpsapi::NtResumeProcess;
 use winapi::{ctypes::c_void, um::winnt::PAGE_READWRITE};
 
-use crate::memory::inject;
+use memory::inject;
 
 const OLD_WIDTH_ADDRESS: [u32; 10] = [
     0x4011F8, 0x407672, 0x4415DA, 0x441908, 0x44193E, 0x44EC12, 0x450137, 0x45047D, 0x486A2C,
@@ -25,10 +31,11 @@ const OLD_WIDTH_ADDRESS: [u32; 10] = [
 ];
 
 const PAD: i16 = 133;
+const POST_OFFSET: i16 = 27;
 
 static mut H_PROCESS: *mut c_void = null_mut();
-static mut BG5_POLE_PTR: u32 = 0;
-static mut BG6_POLE_PTR: u32 = 0;
+static mut POLE_PTR: u32 = 0;
+static mut POLE_NIGHT_PTR: u32 = 0;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let pvz_process = Command::new("PlantsVsZombies.exe")
@@ -38,10 +45,16 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     unsafe {
         H_PROCESS = pvz_process.as_raw_handle() as *mut c_void;
-        BG5_POLE_PTR = alloc_mem(12, PAGE_READWRITE) as u32;
-        patch(BG5_POLE_PTR + 0x4, &transmute::<u16, [u8; 2]>(673));
-        BG6_POLE_PTR = alloc_mem(12, PAGE_READWRITE) as u32;
-        patch(BG6_POLE_PTR + 0x4, &transmute::<u16, [u8; 2]>(673));
+        POLE_PTR = alloc_mem(12, PAGE_READWRITE) as u32;
+        patch(
+            POLE_PTR + 0x4,
+            &transmute::<i16, [u8; 2]>(800 - POST_OFFSET),
+        );
+        POLE_NIGHT_PTR = alloc_mem(12, PAGE_READWRITE) as u32;
+        patch(
+            POLE_NIGHT_PTR + 0x4,
+            &transmute::<i16, [u8; 2]>(800 - POST_OFFSET),
+        );
 
         for address in OLD_WIDTH_ADDRESS {
             patch(address, &transmute::<i16, [u8; 2]>(800 + 2 * PAD));
@@ -78,10 +91,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         code.push(esi)?;
         code.add(esi, esi)?;
         code.add(esi, dword_ptr(esp))?;
-        code.add(esi, 1346 - 3 * PAD as i32)?;
+        code.add(esi, (1600 - 2 * POST_OFFSET - 3 * PAD) as i32)?;
         code.sar(esi, 1)?;
-        code.mov(dword_ptr(BG5_POLE_PTR + 0x4), esi)?;
-        code.mov(dword_ptr(BG6_POLE_PTR + 0x4), esi)?;
+        code.mov(dword_ptr(POLE_PTR + 0x4), esi)?;
+        code.mov(dword_ptr(POLE_NIGHT_PTR + 0x4), esi)?;
         code.mov(esi, dword_ptr(esp))?;
         code.call(eax)?;
         code.jmp(0x43B8FE)?;
@@ -94,10 +107,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         let mut code = CodeAssembler::new(32)?;
         code.add(eax, eax)?;
         code.add(eax, dword_ptr(esp))?;
-        code.add(eax, 1346 - 3 * PAD as i32)?;
+        code.add(eax, (1600 - 2 * POST_OFFSET - 3 * PAD) as i32)?;
         code.sar(eax, 1)?;
-        code.mov(dword_ptr(BG5_POLE_PTR + 0x4), eax)?;
-        code.mov(dword_ptr(BG6_POLE_PTR + 0x4), eax)?;
+        code.mov(dword_ptr(POLE_PTR + 0x4), eax)?;
+        code.mov(dword_ptr(POLE_NIGHT_PTR + 0x4), eax)?;
         code.mov(eax, dword_ptr(edi + 0xa4))?;
         code.jmp(0x43B93F)?;
         inject(0x43B939, code);
@@ -118,10 +131,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         code.push(eax)?;
         code.add(eax, eax)?;
         code.add(eax, dword_ptr(esp))?;
-        code.add(eax, 1346 - 3 * PAD as i32)?;
+        code.add(eax, (1600 - 2 * POST_OFFSET - 3 * PAD) as i32)?;
         code.sar(eax, 1)?;
-        code.mov(dword_ptr(BG5_POLE_PTR + 0x4), eax)?;
-        code.mov(dword_ptr(BG6_POLE_PTR + 0x4), eax)?;
+        code.mov(dword_ptr(POLE_PTR + 0x4), eax)?;
+        code.mov(dword_ptr(POLE_NIGHT_PTR + 0x4), eax)?;
         code.mov(ecx, esi)?;
         code.call(edx)?;
         code.jmp(0x43BA79)?;
@@ -140,8 +153,8 @@ fn main() -> Result<(), Box<dyn Error>> {
 
         // Board starts with offset PAD (LawnApp::MakeNewBoard)
         let mut code = CodeAssembler::new(32)?;
-        code.mov(dword_ptr(BG5_POLE_PTR + 0x4), 673)?;
-        code.mov(dword_ptr(BG6_POLE_PTR + 0x4), 673)?;
+        code.mov(dword_ptr(POLE_PTR + 0x4), 800 - POST_OFFSET as i32)?;
+        code.mov(dword_ptr(POLE_NIGHT_PTR + 0x4), 800 - POST_OFFSET as i32)?;
         code.push(0)?;
         code.push(PAD as i32)?;
         code.mov(ecx, eax)?;
@@ -151,8 +164,8 @@ fn main() -> Result<(), Box<dyn Error>> {
         // Start level intro at 220 + PAD (CutScene::StartLevelIntro)
         let mut code = CodeAssembler::new(32)?;
         code.push(220 + PAD as i32)?;
-        code.mov(dword_ptr(BG5_POLE_PTR + 0x4), 1003)?;
-        code.mov(dword_ptr(BG6_POLE_PTR + 0x4), 1003)?;
+        code.mov(dword_ptr(POLE_PTR + 0x4), 1130 - POST_OFFSET as i32)?;
+        code.mov(dword_ptr(POLE_NIGHT_PTR + 0x4), 1130 - POST_OFFSET as i32)?;
         code.jmp(0x43B016)?;
         inject(0x43B011, code);
 
@@ -237,10 +250,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         code.push(eax)?;
         code.add(eax, eax)?;
         code.add(eax, dword_ptr(esp))?;
-        code.add(eax, 1346 - 3 * PAD as i32)?;
+        code.add(eax, (1600 - 2 * POST_OFFSET - 3 * PAD) as i32)?;
         code.sar(eax, 1)?;
-        code.mov(dword_ptr(BG5_POLE_PTR + 0x4), eax)?;
-        code.mov(dword_ptr(BG6_POLE_PTR + 0x4), eax)?;
+        code.mov(dword_ptr(POLE_PTR + 0x4), eax)?;
+        code.mov(dword_ptr(POLE_NIGHT_PTR + 0x4), eax)?;
         code.mov(eax, dword_ptr(esp))?;
         code.mov(ecx, esi)?;
         code.call(edx)?;
@@ -260,10 +273,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         code.push(eax)?;
         code.add(eax, eax)?;
         code.add(eax, dword_ptr(esp))?;
-        code.add(eax, 1346 - 3 * PAD as i32)?;
+        code.add(eax, (1600 - 2 * POST_OFFSET - 3 * PAD) as i32)?;
         code.sar(eax, 1)?;
-        code.mov(dword_ptr(BG5_POLE_PTR + 0x4), eax)?;
-        code.mov(dword_ptr(BG6_POLE_PTR + 0x4), eax)?;
+        code.mov(dword_ptr(POLE_PTR + 0x4), eax)?;
+        code.mov(dword_ptr(POLE_NIGHT_PTR + 0x4), eax)?;
         code.mov(eax, dword_ptr(esp))?;
         code.mov(ecx, esi)?;
         code.call(edx)?;
@@ -354,6 +367,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
         // Make x = -133 still get Board (Sexy::WidgetContainer::GetWidgetAtHelper)
         let mut code = CodeAssembler::new(32)?;
+        let mut endif = code.create_label();
         code.push(eax)?;
         code.mov(ecx, esi)?;
         code.call(edx)?;
@@ -362,10 +376,11 @@ fn main() -> Result<(), Box<dyn Error>> {
         code.mov(ecx, dword_ptr(0x6A9EC0))?;
         code.mov(ecx, dword_ptr(ecx + 0x768))?;
         code.cmp(dword_ptr(esp), ecx)?;
+        code.jne(endif)?;
+        code.mov(dword_ptr(eax), 0)?;
+        code.set_label(&mut endif)?;
         code.pop(ecx)?;
         code.add(esp, 0x100)?;
-        code.jne(0x5373A0)?;
-        code.mov(dword_ptr(eax), 0)?;
         code.jmp(0x5373A0)?;
         inject(0x53739B, code);
 
@@ -408,7 +423,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         code.jmp(0x41A976)?;
         inject(0x41A971, code);
 
-        patch_obstruction()?;
+        patch_almanac()?;
+        patch_bush()?;
+        patch_challenge()?;
+        patch_store()?;
 
         // std::thread::sleep(std::time::Duration::from_secs(10));
         NtResumeProcess(H_PROCESS);
