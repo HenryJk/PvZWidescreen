@@ -5,7 +5,7 @@ use iced_x86::code_asm::CodeAssembler;
 use winapi::{
     ctypes::c_void,
     um::{
-        memoryapi::{VirtualAllocEx, WriteProcessMemory},
+        memoryapi::{VirtualAllocEx, VirtualProtectEx, WriteProcessMemory},
         winnt::{MEM_COMMIT, PAGE_EXECUTE_READWRITE},
     },
 };
@@ -14,6 +14,17 @@ use crate::H_PROCESS;
 
 pub unsafe fn alloc_mem(size: usize, permission: u32) -> *mut c_void {
     VirtualAllocEx(H_PROCESS, null_mut(), size, MEM_COMMIT, permission)
+}
+
+pub unsafe fn change_permission(address: u32, size: usize, permission: u32) {
+    let mut old_perm = 0u32;
+    VirtualProtectEx(
+        H_PROCESS,
+        address as *mut c_void,
+        size,
+        permission,
+        &mut old_perm as *mut u32,
+    );
 }
 
 pub unsafe fn patch(address: u32, buf: &[u8]) {
@@ -52,3 +63,5 @@ pub unsafe fn inject(address: u32, mut code: CodeAssembler) {
         null_mut(),
     );
 }
+
+

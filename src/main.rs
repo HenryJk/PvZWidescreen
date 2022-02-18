@@ -1,15 +1,31 @@
 mod memory;
 mod patch_almanac;
+mod patch_awardscreen;
 mod patch_bush;
 mod patch_challenge;
+mod patch_cursorobject;
+mod patch_dialogs;
+mod patch_fog;
+mod patch_gameselector;
+mod patch_intro;
 mod patch_store;
+mod patch_titlescreen;
+mod patch_zengarden;
 
 use iced_x86::code_asm::*;
 use memory::{alloc_mem, patch};
 use patch_almanac::patch_almanac;
+use patch_awardscreen::patch_awardscreen;
 use patch_bush::patch_bush;
 use patch_challenge::patch_challenge;
+use patch_cursorobject::patch_cursorobject;
+use patch_dialogs::patch_dialogs;
+use patch_fog::patch_fog;
+use patch_gameselector::patch_gameselector;
+use patch_intro::patch_intro;
 use patch_store::patch_store;
+use patch_titlescreen::patch_titlescreen;
+use patch_zengarden::patch_zengarden;
 
 use core::intrinsics::transmute;
 
@@ -25,17 +41,16 @@ use winapi::{ctypes::c_void, um::winnt::PAGE_READWRITE};
 
 use memory::inject;
 
-const OLD_WIDTH_ADDRESS: [u32; 10] = [
-    0x4011F8, 0x407672, 0x4415DA, 0x441908, 0x44193E, 0x44EC12, 0x450137, 0x45047D, 0x486A2C,
-    0x51813E,
-];
+const OLD_WIDTH_ADDRESS: [u32; 2] = [0x44EC12, 0x51813E];
 
 const PAD: i16 = 133;
-const POST_OFFSET: i16 = 27;
+const POLE_OFFSET: i16 = 27;
 
 static mut H_PROCESS: *mut c_void = null_mut();
 static mut POLE_PTR: u32 = 0;
 static mut POLE_NIGHT_PTR: u32 = 0;
+static mut SLOT_MACHINE_OFFSET_PTR: u32 = 0;
+static mut PAD_CONST_PTR: u32 = 0;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let pvz_process = Command::new("PlantsVsZombies.exe")
@@ -46,15 +61,18 @@ fn main() -> Result<(), Box<dyn Error>> {
     unsafe {
         H_PROCESS = pvz_process.as_raw_handle() as *mut c_void;
         POLE_PTR = alloc_mem(12, PAGE_READWRITE) as u32;
+        SLOT_MACHINE_OFFSET_PTR = alloc_mem(4, PAGE_READWRITE) as u32;
+        PAD_CONST_PTR = alloc_mem(4, PAGE_READWRITE) as u32;
         patch(
             POLE_PTR + 0x4,
-            &transmute::<i16, [u8; 2]>(800 - POST_OFFSET),
+            &transmute::<i16, [u8; 2]>(800 - POLE_OFFSET),
         );
         POLE_NIGHT_PTR = alloc_mem(12, PAGE_READWRITE) as u32;
         patch(
             POLE_NIGHT_PTR + 0x4,
-            &transmute::<i16, [u8; 2]>(800 - POST_OFFSET),
+            &transmute::<i16, [u8; 2]>(800 - POLE_OFFSET),
         );
+        patch(PAD_CONST_PTR, &transmute::<i32, [u8; 4]>(PAD as i32));
 
         for address in OLD_WIDTH_ADDRESS {
             patch(address, &transmute::<i16, [u8; 2]>(800 + 2 * PAD));
@@ -68,14 +86,12 @@ fn main() -> Result<(), Box<dyn Error>> {
         inject(0x4164A4, code);
 
         // Draw image of level background with -220 - PAD offset (Board::DrawBackdrop)
+        patch(0x416356, &transmute::<i16, [u8; 2]>(-220 - PAD));
+        patch(0x41640D, &transmute::<i16, [u8; 2]>(-220 - PAD));
         patch(0x41648E, &transmute::<i16, [u8; 2]>(-220 - PAD));
+        patch(0x4164B4, &transmute::<i16, [u8; 2]>(-220 - PAD));
 
-        // Animate board of zen garden cutscene with -PAD offset (CutScene::AnimateBoard)
-        let mut code = CodeAssembler::new(32)?;
-        code.mov(dword_ptr(esp + 0x4), -PAD as i32)?;
-        code.call(0x511C40)?;
-        code.jmp(0x43BA69)?;
-        inject(0x43BA64, code);
+        patch(0x416461, &transmute::<i16, [u8; 2]>(232 + PAD));
 
         // Increase start of level cutscene shift by PAD (CutScene::AnimateBoard)
         let mut code = CodeAssembler::new(32)?;
@@ -91,7 +107,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         code.push(esi)?;
         code.add(esi, esi)?;
         code.add(esi, dword_ptr(esp))?;
-        code.add(esi, (1600 - 2 * POST_OFFSET - 3 * PAD) as i32)?;
+        code.add(esi, (1600 - 2 * POLE_OFFSET - 3 * PAD) as i32)?;
         code.sar(esi, 1)?;
         code.mov(dword_ptr(POLE_PTR + 0x4), esi)?;
         code.mov(dword_ptr(POLE_NIGHT_PTR + 0x4), esi)?;
@@ -107,7 +123,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         let mut code = CodeAssembler::new(32)?;
         code.add(eax, eax)?;
         code.add(eax, dword_ptr(esp))?;
-        code.add(eax, (1600 - 2 * POST_OFFSET - 3 * PAD) as i32)?;
+        code.add(eax, (1600 - 2 * POLE_OFFSET - 3 * PAD) as i32)?;
         code.sar(eax, 1)?;
         code.mov(dword_ptr(POLE_PTR + 0x4), eax)?;
         code.mov(dword_ptr(POLE_NIGHT_PTR + 0x4), eax)?;
@@ -131,7 +147,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         code.push(eax)?;
         code.add(eax, eax)?;
         code.add(eax, dword_ptr(esp))?;
-        code.add(eax, (1600 - 2 * POST_OFFSET - 3 * PAD) as i32)?;
+        code.add(eax, (1600 - 2 * POLE_OFFSET - 3 * PAD) as i32)?;
         code.sar(eax, 1)?;
         code.mov(dword_ptr(POLE_PTR + 0x4), eax)?;
         code.mov(dword_ptr(POLE_NIGHT_PTR + 0x4), eax)?;
@@ -153,8 +169,9 @@ fn main() -> Result<(), Box<dyn Error>> {
 
         // Board starts with offset PAD (LawnApp::MakeNewBoard)
         let mut code = CodeAssembler::new(32)?;
-        code.mov(dword_ptr(POLE_PTR + 0x4), 800 - POST_OFFSET as i32)?;
-        code.mov(dword_ptr(POLE_NIGHT_PTR + 0x4), 800 - POST_OFFSET as i32)?;
+        code.mov(dword_ptr(POLE_PTR + 0x4), 800 - POLE_OFFSET as i32)?;
+        code.mov(dword_ptr(POLE_NIGHT_PTR + 0x4), 800 - POLE_OFFSET as i32)?;
+        code.mov(dword_ptr(SLOT_MACHINE_OFFSET_PTR), 2 * PAD as i32)?;
         code.push(0)?;
         code.push(PAD as i32)?;
         code.mov(ecx, eax)?;
@@ -164,8 +181,9 @@ fn main() -> Result<(), Box<dyn Error>> {
         // Start level intro at 220 + PAD (CutScene::StartLevelIntro)
         let mut code = CodeAssembler::new(32)?;
         code.push(220 + PAD as i32)?;
-        code.mov(dword_ptr(POLE_PTR + 0x4), 1130 - POST_OFFSET as i32)?;
-        code.mov(dword_ptr(POLE_NIGHT_PTR + 0x4), 1130 - POST_OFFSET as i32)?;
+        code.mov(dword_ptr(POLE_PTR + 0x4), 1130 - POLE_OFFSET as i32)?;
+        code.mov(dword_ptr(POLE_NIGHT_PTR + 0x4), 1130 - POLE_OFFSET as i32)?;
+        code.mov(dword_ptr(SLOT_MACHINE_OFFSET_PTR), PAD as i32)?;
         code.jmp(0x43B016)?;
         inject(0x43B011, code);
 
@@ -197,6 +215,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         code.sub(esp, 0x1C)?;
         code.push(edi)?;
         code.mov(edi, eax)?;
+        code.mov(dword_ptr(SLOT_MACHINE_OFFSET_PTR), 2 * PAD as i32)?;
         code.jmp(0x40BE06)?;
         inject(0x40BE00, code);
 
@@ -250,7 +269,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         code.push(eax)?;
         code.add(eax, eax)?;
         code.add(eax, dword_ptr(esp))?;
-        code.add(eax, (1600 - 2 * POST_OFFSET - 3 * PAD) as i32)?;
+        code.add(eax, (1600 - 2 * POLE_OFFSET - 3 * PAD) as i32)?;
         code.sar(eax, 1)?;
         code.mov(dword_ptr(POLE_PTR + 0x4), eax)?;
         code.mov(dword_ptr(POLE_NIGHT_PTR + 0x4), eax)?;
@@ -273,7 +292,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         code.push(eax)?;
         code.add(eax, eax)?;
         code.add(eax, dword_ptr(esp))?;
-        code.add(eax, (1600 - 2 * POST_OFFSET - 3 * PAD) as i32)?;
+        code.add(eax, (1600 - 2 * POLE_OFFSET - 3 * PAD) as i32)?;
         code.sar(eax, 1)?;
         code.mov(dword_ptr(POLE_PTR + 0x4), eax)?;
         code.mov(dword_ptr(POLE_NIGHT_PTR + 0x4), eax)?;
@@ -310,22 +329,6 @@ fn main() -> Result<(), Box<dyn Error>> {
         code.jmp(0x484F86)?;
         inject(0x484F81, code);
 
-        // Cursor Object placed PAD to the right of cursor (CursorObject::Update)
-        let mut code = CodeAssembler::new(32)?;
-        code.sub(ecx, 25 + PAD as i32)?;
-        code.mov(dword_ptr(esi + 0x8), ecx)?;
-        code.jmp(0x438805)?;
-        inject(0x4387FF, code);
-
-        // Move cursor preview PAD to the right (CursorPreview::Update)
-        let mut code = CodeAssembler::new(32)?;
-        code.sub(ebx, PAD as i32)?;
-        code.push(ebx)?;
-        code.mov(eax, ebp)?;
-        code.mov(ecx, esi)?;
-        code.jmp(0x438DEB)?;
-        inject(0x438DE6, code);
-
         // Move GameButton PAD to the right (GameButton::Update)
         let mut code = CodeAssembler::new(32)?;
         code.mov(edx, dword_ptr(eax + 0xE0))?;
@@ -340,30 +343,6 @@ fn main() -> Result<(), Box<dyn Error>> {
         code.sub(eax, dword_ptr(ebp + 0x34))?;
         code.jmp(0x448355)?;
         inject(0x44834F, code);
-
-        // Draw waveside on the left side of aquarium and wavecenter at 640 (Board::DrawUiBottom)
-        let mut code = CodeAssembler::new(32)?;
-        code.call(0x586CF0)?;
-        code.mov(ecx, dword_ptr(0x6A724C))?;
-        code.push(40)?;
-        code.push(-PAD as i32)?;
-        code.push(edi)?;
-        code.mov(eax, esi)?;
-        code.call(0x587E50)?;
-        code.mov(ecx, dword_ptr(0x6A7AD0))?;
-        code.push(40)?;
-        code.push(640)?;
-        code.push(edi)?;
-        code.mov(eax, esi)?;
-        code.call(0x587E50)?;
-        code.jmp(0x41A0F6)?;
-        inject(0x41A0F1, code);
-
-        // Change left waveside to wavecenter (Board::DrawUiBottom)
-        patch(0x41A0F8, &[0xD0, 0x7A, 0x6A, 0x00]);
-
-        // Move right waveside to 800 + PAD (Board::DrawUiBottom)
-        patch(0x41A162, &transmute::<i16, [u8; 2]>(800 + PAD));
 
         // Make x = -133 still get Board (Sexy::WidgetContainer::GetWidgetAtHelper)
         let mut code = CodeAssembler::new(32)?;
@@ -384,49 +363,78 @@ fn main() -> Result<(), Box<dyn Error>> {
         code.jmp(0x5373A0)?;
         inject(0x53739B, code);
 
-        // Move Fog Column 2 to the left (Board::LeftFogColumn)
-        patch(0x41C1D2, &[0x04]);
-        patch(0x41C1DC, &[0x03]);
-        patch(0x41C201, &[0x02]);
-
-        // Move inlined Board::LeftFogColumn result 2 to the left (Board::ClearFogAroundPlant)
-        let mut code = CodeAssembler::new(32)?;
-        code.sub(dword_ptr(esp), 2)?;
-        code.push(ebp)?;
-        code.push(esi)?;
-        code.mov(esi, dword_ptr(esp + 0x20))?;
-        code.jmp(0x41A4C4)?;
-        inject(0x41A4BE, code);
-
-        // Plant->mCol reduced by 2 for the purpose of fog logic (1st part) (Board::ClearFogAroundPlant)
-        let mut code = CodeAssembler::new(32)?;
-        code.mov(ebp, eax)?;
-        code.sub(ebp, ebx)?;
-        code.add(eax, ebx)?;
-        code.sub(eax, 2)?;
-        code.sub(ebp, 2)?;
-        code.jmp(0x41A4CD)?;
-        inject(0x41A4C7, code);
-
-        // Plant->mCol reduced by 2 for the purpose of fog logic (2nd part) (Board::ClearFogAroundPlant)
-        let mut code = CodeAssembler::new(32)?;
-        code.mov(eax, dword_ptr(esp + 0x10))?;
-        code.sub(eax, dword_ptr(esi + 0x28))?;
-        code.add(eax, 2)?;
-        code.jmp(0x41A53A)?;
-        inject(0x41A533, code);
-
-        // Draw fog offset 160 to the right (Board::DrawFog)
-        let mut code = CodeAssembler::new(32)?;
-        code.call(0x6397D0)?;
-        code.add(eax, 160)?;
-        code.jmp(0x41A976)?;
-        inject(0x41A971, code);
-
         patch_almanac()?;
+        patch_awardscreen()?;
         patch_bush()?;
         patch_challenge()?;
+        patch_cursorobject()?;
+        patch_dialogs()?;
+        patch_gameselector()?;
+        patch_fog()?;
+        patch_intro()?;
         patch_store()?;
+        patch_titlescreen()?;
+        patch_zengarden()?;
+
+        // Make LawnMessage drawn centered
+        patch(0x459C96, &transmute::<i16, [u8; 2]>(800 + 2 * PAD));
+        patch(0x459CB3, &transmute::<i32, [u8; 4]>(-PAD as i32));
+        patch(0x459E4B, &transmute::<i16, [u8; 2]>(800 + 2 * PAD));
+
+        // Move [FLAG_COMPLETED] message draw placement by PAD
+        patch(0x45A011, &transmute::<i16, [u8; 2]>(400 + PAD));
+
+        // Make fadeout full screen
+        let mut code = CodeAssembler::new(32)?;
+        code.mov(dword_ptr(esp), -PAD as i32)?;
+        code.mov(dword_ptr(esp + 0x8), 800 + 2 * PAD as i32)?;
+        code.call(0x586D50)?;
+        code.jmp(0x419F58)?;
+        inject(0x419F53, code);
+
+        // Move [HUGE_WAVE] message draw position by PAD (DrawSeedPacket)
+        let mut code = CodeAssembler::new(32)?;
+        let storage_ptr = alloc_mem(4, PAGE_READWRITE) as u32;
+        patch(storage_ptr, &transmute::<i16, [u8; 2]>(PAD));
+        code.fld(dword_ptr(eax + 0x8))?;
+        code.fiadd(dword_ptr(storage_ptr))?;
+        code.fstp(dword_ptr(eax + 0x8))?;
+        code.call(0x511E50)?;
+        code.jmp(0x45993D)?;
+        inject(0x459938, code);
+
+        // Move slotmachine reamin by PAD (Challenge::DrawSlotMachine)
+        let mut code = CodeAssembler::new(32)?;
+        code.fld(dword_ptr(esp + 0x34))?;
+        code.fiadd(dword_ptr(SLOT_MACHINE_OFFSET_PTR))?;
+        code.fstp(dword_ptr(esp + 0x34))?;
+        code.call(0x472E40)?;
+        code.jmp(0x4252D6)?;
+        inject(0x4252D1, code);
+
+        // Change losing sequence offset (CutScene::UpdateZombiesWon)
+        let mut code = CodeAssembler::new(32)?;
+        code.mov(dword_ptr(esp), PAD as i32)?;
+        code.mov(dword_ptr(esp + 0x4), 220 + PAD as i32)?;
+        code.call(0x511C40)?;
+        code.jmp(0x43C463)?;
+        inject(0x43C45E, code);
+
+        patch(0x457D76, &transmute::<i16, [u8; 2]>(800 + 2 * PAD));
+        patch(0x457E01, &transmute::<i16, [u8; 2]>(635 + PAD));
+        patch(0x457FEC, &transmute::<i16, [u8; 2]>(635 + PAD));
+
+        // (CutScene::PlaceAZombie)
+        patch(0x43919B, &transmute::<i16, [u8; 2]>(830 + PAD));
+
+        let mut code = CodeAssembler::new(32)?;
+        code.add(dword_ptr(esp + 0x4), PAD as i32)?;
+        code.call(0x40E780)?;
+        code.jmp(0x486AFA)?;
+        inject(0x486AF5, code);
+
+        // (SeedChooserScreen::ShowToolTip)
+        patch(0x486582, &transmute::<i16, [u8; 2]>(800 + 2 * PAD));
 
         // std::thread::sleep(std::time::Duration::from_secs(10));
         NtResumeProcess(H_PROCESS);

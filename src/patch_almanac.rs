@@ -5,6 +5,9 @@ use iced_x86::code_asm::*;
 use crate::{memory::inject, PAD};
 
 pub unsafe fn patch_almanac() -> Result<(), Box<dyn Error>> {
+    // Patch Almanac size
+    // patch(0x4011F8, &transmute::<i16, [u8; 2]>(800 + 2 * PAD));
+
     // Move AlmanacDialog PAD to the right (AlmanacDialog::AlmanacDialog)
     let mut code = CodeAssembler::new(32)?;
     code.mov(dword_ptr(esp), PAD as i32)?;
