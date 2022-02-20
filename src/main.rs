@@ -435,6 +435,16 @@ fn main() -> Result<(), Box<dyn Error>> {
 
         // (SeedChooserScreen::ShowToolTip)
         patch(0x486582, &transmute::<i16, [u8; 2]>(800 + 2 * PAD));
+        patch(0x486588, &[0x90; 8]);
+
+        // (ToolTipWidget::Draw)
+        patch(0x51AAEA, &transmute::<i16, [u8; 2]>(800 + 2 * PAD));
+        let float_width_ptr = alloc_mem(8, PAGE_READWRITE) as u32;
+        patch(
+            float_width_ptr,
+            &transmute::<f64, [u8; 8]>(800.0 + 2.0 * PAD as f64),
+        );
+        patch(0x51AAD4, &transmute::<u32, [u8; 4]>(float_width_ptr));
 
         // std::thread::sleep(std::time::Duration::from_secs(10));
         NtResumeProcess(H_PROCESS);
