@@ -1,0 +1,6 @@
+﻿<Properties>
+  <Boolean id="DefaultWindowed">true</Boolean>
+  <Boolean id="DontUpdate">true</Boolean>
+  <String id="ProdName">PlantsVsZombies</String>
+  <String id="RegistryKey">PopCap\PlantsVsZombies</String>
+</Properties>

@@ -1,0 +1,812 @@
+<?xml version="1.0"?>
+<ResourceManifest>
+
+<Resources id="Init">
+  <SetDefaults path="images" idprefix="IMAGE_" />
+  <Image id="BLANK" path="blank" />
+  <Image id="POPCAP_LOGO" path="PopCap_Logo" />
+  
+  <SetDefaults path="properties" idprefix="IMAGE_" />
+  <Image id="PARTNER_LOGO" path="partner_logo" />
+</Resources>
+
+<Resources id="LoaderBar">
+  <SetDefaults path="images" idprefix="IMAGE_" />
+  <Image id="TITLESCREEN" path="titlescreen" a8r8g8b8="" />
+  <Image id="LOADBAR_DIRT" path="LoadBar_dirt" />
+  <Image id="LOADBAR_GRASS" path="LoadBar_grass" />
+  <Image id="PVZ_LOGO" path="PvZ_Logo" />
+
+  <SetDefaults path="reanim" idprefix="IMAGE_REANIM_" />
+  <Image id="SODROLLCAP" path="SodRollCap" />
+  
+  <SetDefaults path="data" idprefix="FONT_" />
+  <Font id="BRIANNETOD16" path="BrianneTod16.txt" />
+
+  <SetDefaults path="sounds" idprefix="SOUND_" />
+  <Sound id="BUTTONCLICK" path="buttonclick" />
+  <Sound id="LOADINGBAR_FLOWER" path="loadingbar_flower" />
+  <Sound id="LOADINGBAR_ZOMBIE" path="loadingbar_zombie" />
+</Resources>
+  
+<Resources id="LoadingFonts">
+
+<SetDefaults path="data" idprefix="FONT_" />
+<Image id="IMAGE_HOUSEOFTERROR28" path="houseofterror28" />
+<Font id="HOUSEOFTERROR28" path="HouseofTerror28.txt" />
+<Font id="HOUSEOFTERROR20" path="HouseofTerror20.txt" />
+<Font id="HOUSEOFTERROR16" path="HouseofTerror16.txt" />
+<Font id="TINYBOLD" path="Pix118Bold.txt" />
+<Font id="CONTINUUMBOLD14" path="ContinuumBold14.txt" />
+<Font id="CONTINUUMBOLD14OUTLINE" path="ContinuumBold14Outback.txt" />
+<Font id="DWARVENTODCRAFT12" path="DwarvenTodcraft12.txt" />
+<Font id="DWARVENTODCRAFT15" path="DwarvenTodcraft15.txt" />
+<Font id="DWARVENTODCRAFT18" path="DwarvenTodcraft18.txt" />
+<Font id="DWARVENTODCRAFT18BRIGHTGREENINSET" path="DwarvenTodcraft18BrightGreenInset.txt" />
+<Font id="DWARVENTODCRAFT18GREENINSET" path="DwarvenTodcraft18GreenInset.txt" />
+<Font id="DWARVENTODCRAFT18YELLOW" path="DwarvenTodcraft18Yellow.txt" />
+<Font id="DWARVENTODCRAFT24" path="DwarvenTodcraft24.txt" />
+<Font id="DWARVENTODCRAFT36BRIGHTGREENINSET" path="DwarvenTodcraft36BrightGreenInset.txt" />
+<Font id="DWARVENTODCRAFT36GREENINSET" path="DwarvenTodcraft36GreenInset.txt" />
+<Font id="PICO129" path="Pico129.txt" />
+<Font id="BRIANNETOD12" path="BrianneTod12.txt" />
+  
+</Resources>
+  
+<Resources id="LoadingImages">
+  
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="EDITBOX" path="editbox" />
+<Image id="DIALOG_TOPLEFT" path="dialog_topleft" />
+<Image id="DIALOG_TOPMIDDLE" path="dialog_topmiddle" />
+<Image id="DIALOG_TOPRIGHT" path="dialog_topright" />
+<Image id="DIALOG_CENTERLEFT" path="dialog_centerleft" />
+<Image id="DIALOG_CENTERMIDDLE" path="dialog_centermiddle" />
+<Image id="DIALOG_CENTERRIGHT" path="dialog_centerright" />
+<Image id="DIALOG_BOTTOMLEFT" path="dialog_bottomleft" />
+<Image id="DIALOG_BOTTOMMIDDLE" path="dialog_bottommiddle" />
+<Image id="DIALOG_BOTTOMRIGHT" path="dialog_bottomright" />
+<Image id="DIALOG_BIGBOTTOMLEFT" path="dialog_bigbottomleft" />
+<Image id="DIALOG_BIGBOTTOMMIDDLE" path="dialog_bigbottommiddle" />
+<Image id="DIALOG_BIGBOTTOMRIGHT" path="dialog_bigbottomright" />
+<Image id="DIALOG_HEADER" path="dialog_header" />
+<Image id="BUTTON_LEFT" path="button_left" />
+<Image id="BUTTON_MIDDLE" path="button_middle" />
+<Image id="BUTTON_RIGHT" path="button_right" />
+<Image id="BUTTON_DOWN_LEFT" path="button_down_left" />
+<Image id="BUTTON_DOWN_MIDDLE" path="button_down_middle" />
+<Image id="BUTTON_DOWN_RIGHT" path="button_down_right" />
+  
+<SetDefaults path="images" idprefix="IMAGE_" />
+
+<!-- Screens -->
+<Image id="SEEDCHOOSER_BACKGROUND" path="SeedChooser_BackGround"  />
+<Image id="SEEDCHOOSER_BUTTON" path="SeedChooser_Button" />
+<Image id="SEEDCHOOSER_BUTTON_DISABLED" path="SeedChooser_Button_Disabled" />
+<Image id="SEEDCHOOSER_BUTTON_GLOW" path="SeedChooser_Button_Glow" />
+<Image id="SEEDCHOOSER_BUTTON2" path="SeedChooser_Button2" />
+<Image id="SEEDCHOOSER_BUTTON2_GLOW" path="SeedChooser_Button2_Glow" />
+<Image id="SEEDCHOOSER_IMITATERADDON" path="SeedChooser_ImitaterAddOn" />  
+<Image id="SEEDS" path="seeds" cols="9" />
+<Image id="SEEDPACKET_LARGER" path="SeedPacket_Larger" />
+<Image id="SEEDPACKETSILHOUETTE" path="SeedPacketSilhouette" />
+<Image id="FLAGMETER" path="FlagMeter" rows="2" minsubdivide="" />
+<Image id="FLAGMETERLEVELPROGRESS" path="FlagMeterLevelProgress" />
+<Image id="FLAGMETERPARTS" path="FlagMeterParts" cols="3" />
+<Image id="TROPHY" path="trophy" />
+<Image id="TROPHY_HI_RES" path="trophy_hi_res" />
+<Image id="MINIGAME_TROPHY" path="Minigame_trophy" />
+<Image id="ZOMBIE_NOTE_SMALL" path="ZombieNoteSmall" />
+<Image id="TACO" path="Taco" />
+<Image id="CARKEYS" path="CarKeys" />
+<Image id="ALMANAC" path="Almanac" />
+<Image id="ICON_POOLCLEANER" path="icon_poolcleaner" />
+<Image id="ICON_ROOFCLEANER" path="icon_roofcleaner" />
+<Image id="ICON_RAKE" path="icon_rake" />
+<Image id="BRAIN" path="Brain" />
+<Image id="MONEYBAG" path="moneybag" />
+<Image id="MONEYBAG_HI_RES" path="moneybag_hi_res" />
+<Image id="CHOCOLATE" path="Chocolate" />
+
+<!-- Buttons and other UI -->
+<Image id="OPTIONS_BACKTOGAMEBUTTON0" path="options_backtogamebutton0" />
+<Image id="OPTIONS_BACKTOGAMEBUTTON2" path="options_backtogamebutton2" />
+<Image id="OPTIONS_CHECKBOX0" path="options_checkbox0" />
+<Image id="OPTIONS_CHECKBOX1" path="options_checkbox1" />
+<Image id="OPTIONS_MENUBACK" path="options_menuback" />
+<Image id="OPTIONS_SLIDERKNOB2" path="options_sliderknob2" />
+<Image id="OPTIONS_SLIDERSLOT" path="options_sliderslot" />
+<Image id="SELECTORSCREEN_HELP1" path="SelectorScreen_Help1" />
+<Image id="SELECTORSCREEN_HELP2" path="SelectorScreen_Help2" />
+<Image id="SELECTORSCREEN_OPTIONS1" path="SelectorScreen_Options1" />
+<Image id="SELECTORSCREEN_OPTIONS2" path="SelectorScreen_Options2" />
+<Image id="SELECTORSCREEN_QUIT1" path="SelectorScreen_Quit1" />
+<Image id="SELECTORSCREEN_QUIT2" path="SelectorScreen_Quit2"  />
+<Image id="SELECTORSCREEN_ALMANAC" path="SelectorScreen_Almanac"  />
+<Image id="SELECTORSCREEN_ALMANACHIGHLIGHT" path="SelectorScreen_AlmanacHighlight"  />
+<Image id="SELECTORSCREEN_STORE" path="SelectorScreen_Store"  />
+<Image id="SELECTORSCREEN_STOREHIGHLIGHT" path="SelectorScreen_StoreHighlight"  />
+<Image id="SELECTORSCREEN_LEVELNUMBERS" path="SelectorScreen_LevelNumbers" cols="10" />
+<Image id="SELECTORSCREEN_ZENGARDEN" path="SelectorScreen_ZenGarden"  />
+<Image id="SELECTORSCREEN_ZENGARDENHIGHLIGHT" path="SelectorScreen_ZenGardenHighlight"  />
+<Image id="STORE_SPEECHBUBBLE" path="Store_SpeechBubble" />
+<Image id="STORE_SPEECHBUBBLE2" path="Store_SpeechBubble2" />
+
+<!-- Misc small items -->
+<Image id="SHOVEL" path="shovel" />
+<Image id="SHOVEL_HI_RES" path="shovel_hi_res" />
+<Image id="TOMBSTONES" path="Tombstones" cols="5" rows="4"/>
+<Image id="TOMBSTONE_MOUNDS" path="Tombstone_mounds" cols="5" rows="4"/>
+<Image id="NIGHT_GRAVE_GRAPHIC" path="Night_grave_graphic" />
+<Image id="CRATER" path="crater" cols="2" />
+<Image id="CRATER_FADING" path="crater_fading" cols="2" />
+<Image id="CRATER_ROOF_CENTER" path="crater_roof_center" cols="2" />
+<Image id="CRATER_ROOF_LEFT" path="crater_roof_left" cols="2" />
+<Image id="CRATER_WATER_DAY" path="crater_water_day" cols="2" />
+<Image id="CRATER_WATER_NIGHT" path="crater_water_night" cols="2" />
+<Image id="COBCANNON_TARGET" path="CobCannon_target" />
+<Image id="COBCANNON_POPCORN" path="CobCannon_popcorn" cols="5" />
+<Image id="FERTILIZER" path="Fertilizer" />
+<Image id="WATERINGCAN" path="WateringCan" />
+<Image id="WATERINGCANGOLD" path="WateringCanGold" />
+<Image id="PHONOGRAPH" path="Phonograph" />
+<Image id="BEGHOULED_TWIST_OVERLAY" path="Beghouled_Twist_overlay" />
+<Image id="ZEN_GOLDTOOLRETICLE" path="Zen_GoldToolReticle" />
+<Image id="ZEN_GARDENGLOVE" path="Zen_GardenGlove" />
+<Image id="ZEN_MONEYSIGN" path="Zen_MoneySign" />
+<Image id="ZEN_NEXTGARDEN" path="Zen_NextGarden" />
+<Image id="ZEN_WHEELBARROW" path="Zen_WheelBarrow" />
+<Image id="ZENSHOPBUTTON" path="zenshopbutton" />
+<Image id="ZENSHOPBUTTON_HIGHLIGHT" path="zenshopbutton_highlight" />
+<Image id="PRESENT" path="Present" />
+<Image id="PRESENTOPEN" path="PresentOpen" />
+<Image id="SUNFLOWER_TROPHY" path="Sunflower_trophy" cols="2" />
+<Image id="SLOTMACHINE_OVERLAY" path="SlotMachine_Overlay" />
+<Image id="SCARY_POT" path="Scary_Pot" cols="3" rows="2" />
+<Image id="BUG_SPRAY" path="bug_spray" />
+<Image id="PLANTSPEECHBUBBLE" path="plantspeechbubble" />
+<Image id="WATERDROP" path="waterdrop" />
+<Image id="TREEFOOD" path="TreeFood" />
+<Image id="PACKET_PLANTS" path="packet_plants" cols="13" />
+<Image id="ZEN_NEED_ICONS" path="zen_need_icons" cols="3" />
+
+<!-- Various strips -->
+<Image id="PROJECTILEPEA" path="projectilepea" />
+<Image id="PROJECTILESNOWPEA" path="projectilesnowpea" />
+<Image id="PROJECTILECACTUS" path="ProjectileCactus" />
+<Image id="DIRTSMALL" path="dirtsmall" cols="8" rows="2" />
+<Image id="DIRTBIG" path="dirtbig" cols="4" rows="2" />
+<Image id="ROCKSMALL" path="RockSmall" cols="8" rows="2" />
+<Image id="WATERPARTICLE" path="waterparticle" cols="6" />
+<Image id="WHITEWATER" path="whitewater" cols="3"  />
+<Image id="WHITEWATER_SHADOW" path="whitewater_shadow"  />
+<Image id="MELONPULT_PARTICLES" path="Melonpult_particles" cols="9" />
+<Image id="WINTERMELON_PARTICLES" path="WinterMelon_particles" cols="9" />
+<Image id="PROJECTILE_STAR" path="Projectile_star" />
+
+<!-- Background -->
+<Image id="SEEDBANK" path="SeedBank" minsubdivide="" />
+<Image id="CONVEYORBELT_BACKDROP" path="ConveyorBelt_backdrop" />
+<Image id="CONVEYORBELT" path="ConveyorBelt" rows="6" />
+<Image id="SHOVELBANK" path="ShovelBank" />
+<Image id="SUNBANK" path="sunbank" />
+<Image id="COINBANK" path="coinbank" />
+<Image id="POOL" path="pool" minsubdivide="" />
+<Image id="POOL_NIGHT" path="pool_night" minsubdivide="" />
+<Image id="POOL_BASE" path="pool_base" minsubdivide="" />
+<Image id="POOL_BASE_NIGHT" path="pool_base_night" alphagrid="pool_base_" minsubdivide="" />
+<Image id="POOL_SHADING" path="pool_shading" minsubdivide="" />
+<Image id="POOL_SHADING_NIGHT" path="pool_shading_night" alphagrid="pool_shading_" minsubdivide="" />
+<Image id="POOL_CAUSTIC_EFFECT" path="pool_caustic_effect" nopal="" minsubdivide="" />
+<Image id="PLANTSHADOW" path="plantshadow" minsubdivide="" />
+<Image id="PLANTSHADOW2" path="plantshadow2" minsubdivide="" />
+<Image id="PEA_SHADOWS" path="pea_shadows" cols="2" />
+<Image id="WALLNUT_BOWLINGSTRIPE" path="Wallnut_bowlingstripe" />
+<Image id="ICE" path="ice" />
+<Image id="ICE_CAP" path="ice_cap" />
+<Image id="ICE_SPARKLES" path="ice_sparkles" cols="3" />
+
+<Image id="IMITATERSEED" path="ImitaterSeed" />
+<Image id="ALMANAC_IMITATER" path="Almanac_Imitater" />
+<Image id="IMITATERSEEDDISABLED" path="ImitaterSeedDisabled" />
+<Image id="ICETRAP" path="icetrap" />
+<Image id="ICETRAP2" path="icetrap2" />
+<Image id="ICETRAP_PARTICLES" path="icetrap_particles" cols="4" />
+
+<!-- Bush Bases -->
+<Image id="B_BASE" path="B_base" />
+<Image id="BN_BASE" path="BN_base" />
+
+<!-- Zombies -->
+<Image id="ZOMBIE_BOBSLED1" path="Zombie_bobsled1" />
+<Image id="ZOMBIE_BOBSLED2" path="Zombie_bobsled2" />
+<Image id="ZOMBIE_BOBSLED3" path="Zombie_bobsled3" />
+<Image id="ZOMBIE_BOBSLED4" path="Zombie_bobsled4" />
+<Image id="ZOMBIE_BOBSLED_INSIDE" path="Zombie_bobsled_inside" />
+<Image id="BUNGEECORD" path="BungeeCord" />
+<Image id="BUNGEETARGET" path="BungeeTarget" />
+<Image id="SPOTLIGHT" path="spotlight" />
+<Image id="SPOTLIGHT2" path="spotlight2" />
+  
+<SetDefaults path="particles" idprefix="IMAGE_" />  
+<Image id="WHITEPIXEL" path="whitepixel" />  
+<Image id="ZOMBIEPOLEVAULTERHEAD" path="zombiepolevaulterhead" />  
+<Image id="ZOMBIEFOOTBALLHEAD" path="ZombieFootballHead" />
+<Image id="POOLSPARKLY" path="poolsparkly" />
+<Image id="WALLNUTPARTICLESSMALL" path="wallnutparticlessmall" cols="5" />
+<Image id="WALLNUTPARTICLESLARGE" path="wallnutparticleslarge" cols="5" />
+<Image id="PEA_SPLATS" path="pea_splats" cols="4" />
+<Image id="STAR_PARTICLES" path="Star_particles" cols="3" />
+<Image id="STAR_SPLATS" path="Star_splats" cols="4" />
+<Image id="PEA_PARTICLES" path="pea_particles" cols="3" />
+<Image id="SNOWPEA_SPLATS" path="snowpea_splats" cols="4" />
+<Image id="SNOWPEA_PARTICLES" path="snowpea_particles" cols="3" />
+<Image id="SNOWPEA_PUFF" path="snowpea_puff" cols="6" />
+<Image id="SNOWFLAKES" path="snowflakes" cols="3" />
+<Image id="POTATOMINE_PARTICLES" path="potatomine_particles" cols="6" />
+<Image id="PUFFSHROOM_PUFF1" path="PuffShroom_puff1"  />
+<Image id="ZAMBONISMOKE" path="ZamboniSmoke" cols="3" />
+<Image id="ZOMBIEDANCERHEAD" path="ZombieDancerHead" />
+<Image id="ZOMBIEBALLOONHEAD" path="ZombieBalloonHead" />
+<Image id="ZOMBIEIMPHEAD" path="ZombieImpHead" />
+<Image id="ZOMBIEDIGGERHEAD" path="ZombieDiggerHead" />
+<Image id="ZOMBIEDIGGERARM" path="ZombieDiggerArm" />
+<Image id="ZOMBIEDOLPHINRIDERHEAD" path="ZombieDolphinRiderHead" />
+<Image id="ZOMBIEPOGO" path="ZombiePogo" cols="3" />
+<Image id="ZOMBIEBACKUPDANCERHEAD" path="ZombieBackupDancerHead" />
+<Image id="ZOMBIEBOBSLEDHEAD" path="ZombieBobSledHead" />
+<Image id="ZOMBIELADDERHEAD" path="ZombieLadderHead" />
+<Image id="ZOMBIEYETIHEAD" path="ZombieYetiHead" />
+<Image id="SEEDPACKETFLASH" path="SeedPacketFlash" />
+<Image id="ZOMBIEJACKBOXARM" path="ZombieJackboxArm" />
+<Image id="IMITATERCLOUDS" path="ImitaterClouds" cols="2" />
+<Image id="IMITATERPUFFS" path="ImitaterPuffs" cols="8" />
+<Image id="ZOMBIE_BOSS_FIREBALL_PARTICLES" path="Zombie_boss_fireball_particles" cols="4" />
+<Image id="ZOMBIE_BOSS_ICEBALL_PARTICLES" path="Zombie_boss_iceball_particles" cols="4" />
+<Image id="ZOMBIE_BOSS_FIREBALL_GROUNDPARTICLES" path="Zombie_boss_fireball_groundparticles" cols="4" />
+<Image id="ZOMBIE_BOSS_ICEBALL_GROUNDPARTICLES" path="Zombie_boss_iceball_groundparticles" cols="4" />
+<Image id="DOOMSHROOM_EXPLOSION_BASE" path="DoomShroom_Explosion_Base" cols="3" />
+<Image id="RAIN" path="Rain" />
+<Image id="VASE_CHUNKS" path="vase_chunks" cols="9" rows="3" />
+<Image id="ZOMBOSS_PARTICLES" path="Zomboss_particles" cols="5" />
+<Image id="AWARDPICKUPGLOW" path="AwardPickupGlow" />
+<Image id="ZOMBIE_SEAWEED" path="Zombie_seaweed" cols="4" />
+<Image id="PINATA" path="pinata" cols="5" />
+<Image id="ZOMBIEFUTUREGLASSES" path="ZombieFutureGlasses" cols="4" />
+<Image id="DUST_PUFFS" path="Dust_puffs" cols="3" />
+
+<SetDefaults path="reanim" idprefix="IMAGE_REANIM_" />
+  
+<Image id="WALLNUT_BODY" path="Wallnut_body" />
+<Image id="WALLNUT_CRACKED1" path="Wallnut_cracked1" />
+<Image id="WALLNUT_CRACKED2" path="Wallnut_cracked2" />
+<Image id="TALLNUT_CRACKED1" path="Tallnut_cracked1" />
+<Image id="TALLNUT_CRACKED2" path="Tallnut_cracked2" />
+<Image id="PUMPKIN_DAMAGE1" path="Pumpkin_damage1" />
+<Image id="PUMPKIN_DAMAGE3" path="Pumpkin_damage3" />
+<Image id="ZOMBIE_CONE1" path="Zombie_cone1" />
+<Image id="ZOMBIE_CONE2" path="Zombie_cone2" />
+<Image id="ZOMBIE_CONE3" path="Zombie_cone3" />
+<Image id="ZOMBIE_BUCKET1" path="Zombie_bucket1" />
+<Image id="ZOMBIE_BUCKET2" path="Zombie_bucket2" />
+<Image id="ZOMBIE_BUCKET3" path="Zombie_bucket3" />
+<Image id="ZOMBIE_DIGGER_HARDHAT" path="Zombie_digger_hardhat" />
+<Image id="ZOMBIE_DIGGER_HARDHAT2" path="Zombie_digger_hardhat2" />
+<Image id="ZOMBIE_DIGGER_HARDHAT3" path="Zombie_digger_hardhat3" />
+<Image id="ZOMBIE_SCREENDOOR1" path="Zombie_screendoor1" />
+<Image id="ZOMBIE_SCREENDOOR2" path="Zombie_screendoor2" />
+<Image id="ZOMBIE_SCREENDOOR3" path="Zombie_screendoor3" />
+<Image id="ZOMBIE_FLAG1" path="Zombie_flag1" />
+<Image id="ZOMBIE_FLAG3" path="Zombie_flag3" />
+<Image id="ZOMBIE_OUTERARM_UPPER2" path="Zombie_outerarm_upper2" />
+<Image id="ZOMBIE_FOOTBALL_HELMET" path="Zombie_football_helmet" />
+<Image id="ZOMBIE_FOOTBALL_HELMET2" path="Zombie_football_helmet2" />
+<Image id="ZOMBIE_FOOTBALL_HELMET3" path="Zombie_football_helmet3" />
+<Image id="ZOMBIE_FOOTBALL_LEFTARM_HAND" path="Zombie_football_leftarm_hand" />
+<Image id="ZOMBIE_FOOTBALL_LEFTARM_UPPER2" path="zombie_football_leftarm_upper2" />
+<Image id="ZOMBIE_PAPER_LEFTARM_UPPER2" path="Zombie_paper_leftarm_upper2" />
+<Image id="ZOMBIE_PAPER_LEFTARM_LOWER" path="Zombie_paper_leftarm_lower" />
+<Image id="ZOMBIE_PAPER_PAPER2" path="Zombie_paper_paper2" />
+<Image id="ZOMBIE_PAPER_PAPER3" path="Zombie_paper_paper3" />
+<Image id="ZOMBIE_PAPER_MADHEAD" path="Zombie_paper_madhead" />
+<Image id="ZOMBIE_ZAMBONI_1_DAMAGE1" path="Zombie_zamboni_1_damage1" />
+<Image id="ZOMBIE_ZAMBONI_1_DAMAGE2" path="Zombie_zamboni_1_damage2" />
+<Image id="ZOMBIE_ZAMBONI_2_DAMAGE1" path="Zombie_zamboni_2_damage1" />
+<Image id="ZOMBIE_ZAMBONI_2_DAMAGE2" path="Zombie_zamboni_2_damage2" />
+<Image id="ZOMBIE_ZAMBONI_WHEEL_FLAT" path="Zombie_zamboni_wheel_flat" />
+<Image id="COIN_SILVER_DOLLAR" path="Coin_silver_dollar" />
+<Image id="COIN_GOLD_DOLLAR" path="Coin_gold_dollar" />
+<Image id="DIAMOND" path="Diamond" />
+<Image id="COINGLOW" path="coinglow" />  
+<Image id="ZOMBIE_JACKSON_OUTERARM_HAND" path="Zombie_Jackson_outerarm_hand" />
+<Image id="ZOMBIE_JACKSON_OUTERARM_UPPER2" path="Zombie_Jackson_outerarm_upper2" />
+<Image id="ZOMBIE_DANCER_INNERARM_HAND" path="Zombie_dancer_innerarm_hand" />
+<Image id="ZOMBIE_POLEVAULTER_OUTERARM_UPPER2" path="Zombie_polevaulter_outerarm_upper2" />
+<Image id="ZOMBIE_OUTERARM_HAND" path="Zombie_outerarm_hand" />
+<Image id="ZOMBIE_BALLOON_OUTERARM_UPPER2" path="Zombie_balloon_outerarm_upper2" />
+<Image id="ZOMBIE_IMP_ARM1_BONE" path="Zombie_imp_arm1_bone" />
+<Image id="ZOMBIE_IMP_ARM2" path="Zombie_imp_arm2" />
+<Image id="ZOMBIE_GARGANTUAR_BODY1_2" path="Zombie_gargantuar_body1_2" />
+<Image id="ZOMBIE_GARGANTUAR_BODY1_3" path="Zombie_gargantuar_body1_3" />
+<Image id="ZOMBIE_GARGANTUAR_DUCKXING" path="Zombie_gargantuar_duckxing" />
+<Image id="ZOMBIE_GARGANTUAR_ZOMBIE" path="Zombie_gargantuar_zombie" />
+<Image id="ZOMBIE_GARGANTUAR_FOOT2" path="Zombie_gargantuar_foot2" />
+<Image id="ZOMBIE_GARGANTUAR_HEAD2" path="Zombie_gargantuar_head2" />
+<Image id="ZOMBIE_GARGANTUAR_OUTERARM_LOWER2" path="Zombie_gargantuar_outerarm_lower2" />
+<Image id="ZOMBIE_GARGANTUAR_HEAD2_REDEYE" path="Zombie_gargantuar_head2_redeye" />
+<Image id="ZOMBIE_GARGANTUAR_HEAD_REDEYE" path="Zombie_gargantuar_head_redeye" />
+<Image id="ZOMBIE_DIGGER_OUTERARM_UPPER2" path="Zombie_digger_outerarm_upper2" />
+<Image id="ZOMBIE_DOLPHINRIDER_OUTERARM_UPPER2" path="Zombie_dolphinrider_outerarm_upper2" />
+<Image id="ZOMBIE_POGO_OUTERARM_UPPER2" path="Zombie_pogo_outerarm_upper2" />
+<Image id="ZOMBIE_POGO_STICKDAMAGE1" path="Zombie_pogo_stickdamage1" />
+<Image id="ZOMBIE_POGO_STICKDAMAGE2" path="Zombie_pogo_stickdamage2" />
+<Image id="ZOMBIE_POGO_STICK2DAMAGE1" path="Zombie_pogo_stick2damage1" />
+<Image id="ZOMBIE_POGO_STICK2DAMAGE2" path="Zombie_pogo_stick2damage2" />
+<Image id="ZOMBIE_POGO_STICKHANDS2" path="Zombie_pogo_stickhands2" />
+<Image id="ZOMBIE_BOBSLED_OUTERARM_UPPER2" path="Zombie_bobsled_outerarm_upper2" />
+<Image id="ZOMBIE_BOBSLED_OUTERARM_HAND" path="Zombie_bobsled_outerarm_hand" />
+<Image id="ZOMBIE_JACKBOX_BOX" path="Zombie_jackbox_box" />
+<Image id="ZOMBIE_JACKBOX_OUTERARM_LOWER2" path="Zombie_jackbox_outerarm_lower2" />
+<Image id="ZOMBIE_SNORKLE_OUTERARM_UPPER2" path="Zombie_snorkle_outerarm_upper2" />
+<Image id="ZOMBIE_BUNGI_HEAD_SCARED" path="Zombie_bungi_head_scared" />
+<Image id="ZOMBIE_CATAPULT_BASKETBALL" path="Zombie_catapult_basketball" />
+<Image id="ZOMBIE_CATAPULT_POLE" path="Zombie_catapult_pole" />
+<Image id="ZOMBIE_CATAPULT_POLE_DAMAGE" path="Zombie_catapult_pole_damage" />
+<Image id="ZOMBIE_CATAPULT_POLE_WITHBALL" path="Zombie_catapult_pole_withball" />
+<Image id="ZOMBIE_CATAPULT_POLE_DAMAGE_WITHBALL" path="Zombie_catapult_pole_damage_withball" />
+<Image id="ZOMBIE_CATAPULT_SIDING_DAMAGE" path="Zombie_catapult_siding_damage" />
+<Image id="ZOMBIE_LADDER_1" path="Zombie_ladder_1" />
+<Image id="ZOMBIE_LADDER_1_DAMAGE1" path="Zombie_ladder_1_damage1" />
+<Image id="ZOMBIE_LADDER_1_DAMAGE2" path="Zombie_ladder_1_damage2" />
+<Image id="ZOMBIE_LADDER_5" path="Zombie_ladder_5" />
+<Image id="ZOMBIE_LADDER_OUTERARM_UPPER2" path="Zombie_ladder_outerarm_upper2" />
+<Image id="ZOMBIE_BOSS_ICEBALL" path="Zombie_boss_iceball" />
+<Image id="ZOMBIE_BOSS_HEAD_DAMAGE1" path="Zombie_boss_head_damage1" />
+<Image id="ZOMBIE_BOSS_HEAD_DAMAGE2" path="Zombie_boss_head_damage2" />
+<Image id="ZOMBIE_BOSS_JAW_DAMAGE1" path="Zombie_boss_jaw_damage1" />
+<Image id="ZOMBIE_BOSS_JAW_DAMAGE2" path="Zombie_boss_jaw_damage2" />
+<Image id="ZOMBIE_BOSS_OUTERARM_HAND_DAMAGE1" path="Zombie_boss_outerarm_hand_damage1" />
+<Image id="ZOMBIE_BOSS_OUTERARM_HAND_DAMAGE2" path="Zombie_boss_outerarm_hand_damage2" />
+<Image id="ZOMBIE_BOSS_OUTERARM_THUMB_DAMAGE1" path="Zombie_boss_outerarm_thumb_damage1" />
+<Image id="ZOMBIE_BOSS_OUTERARM_THUMB_DAMAGE2" path="Zombie_boss_outerarm_thumb_damage2" />
+<Image id="ZOMBIE_BOSS_FOOT_DAMAGE1" path="Zombie_boss_foot_damage1" />
+<Image id="ZOMBIE_BOSS_FOOT_DAMAGE2" path="Zombie_boss_foot_damage2" />
+<Image id="ZOMBIE_BOSS_EYEGLOW_BLUE" path="Zombie_boss_eyeglow_blue" />
+<Image id="ZOMBIE_BOSS_MOUTHGLOW_BLUE" path="Zombie_boss_mouthglow_blue" />
+<Image id="CABBAGEPULT_CABBAGE" path="Cabbagepult_cabbage" />
+<Image id="CORNPULT_KERNAL" path="Cornpult_kernal" />
+<Image id="CORNPULT_BUTTER" path="Cornpult_butter" />
+<Image id="CORNPULT_BUTTER_SPLAT" path="Cornpult_butter_splat" />
+<Image id="MELONPULT_MELON" path="Melonpult_melon" />
+<Image id="WINTERMELON_PROJECTILE" path="WinterMelon_projectile" />
+<Image id="ZOMBIE_DIGGER_PICKAXE" path="Zombie_digger_pickaxe" />
+<Image id="ZOMBIE_HEAD_GROSSOUT" path="Zombie_head_grossout" />
+<Image id="ZOMBIE_HEAD_SUNGLASSES1" path="Zombie_head_sunglasses1" />
+<Image id="ZOMBIE_HEAD_SUNGLASSES2" path="Zombie_head_sunglasses2" />
+<Image id="ZOMBIE_HEAD_SUNGLASSES3" path="Zombie_head_sunglasses3" />
+<Image id="ZOMBIE_HEAD_SUNGLASSES4" path="Zombie_head_sunglasses4" />
+<Image id="GARLIC_BODY2" path="Garlic_body2" />
+<Image id="GARLIC_BODY3" path="Garlic_body3" />
+<Image id="COBCANNON_COB" path="CobCannon_cob" />
+<Image id="ZOMBIE_YETI_OUTERARM_UPPER2" path="Zombie_yeti_outerarm_upper2" />
+<Image id="ZOMBIE_YETI_OUTERARM_HAND" path="Zombie_yeti_outerarm_hand" />
+<Image id="ZOMBIE_SNORKLE_HEAD" path="Zombie_snorkle_head" />
+<Image id="SELECTORSCREEN_ADVENTURE_BUTTON" path="SelectorScreen_Adventure_button" />
+<Image id="SELECTORSCREEN_ADVENTURE_HIGHLIGHT" path="SelectorScreen_Adventure_Highlight" />
+<Image id="SELECTORSCREEN_STARTADVENTURE_BUTTON" path="SelectorScreen_StartAdventure_Button1" />
+<Image id="SELECTORSCREEN_STARTADVENTURE_HIGHLIGHT" path="SelectorScreen_StartAdventure_Highlight" />
+<Image id="SELECTORSCREEN_SURVIVAL_BUTTON" path="SelectorScreen_Survival_button" />
+<Image id="SELECTORSCREEN_SURVIVAL_HIGHLIGHT" path="SelectorScreen_Survival_Highlight" />
+<Image id="SELECTORSCREEN_CHALLENGES_BUTTON" path="SelectorScreen_Challenges_button" />
+<Image id="SELECTORSCREEN_CHALLENGES_HIGHLIGHT" path="SelectorScreen_Challenges_Highlight" />
+<Image id="SELECTORSCREEN_VASEBREAKER_BUTTON" path="SelectorScreen_Vasebreaker_button" />
+<Image id="SELECTORSCREEN_VASEBREAKER_HIGHLIGHT" path="SelectorScreen_Vasebreaker_Highlight" />
+<Image id="SELECTORSCREEN_WOODSIGN2_PRESS" path="SelectorScreen_WoodSign2_press" />
+<Image id="SELECTORSCREEN_BG" path="SelectorScreen_BG" a8r8g8b8="" />
+<Image id="SELECTORSCREEN_ALMANAC_SHADOW" path="Selectorscreen_almanac_shadow" />
+<Image id="SELECTORSCREEN_KEY_SHADOW" path="Selectorscreen_key_shadow" />
+<Image id="TREE_BG" path="tree_bg" a8r8g8b8="" />
+<Image id="POT_TOP_DARK" path="Pot_top_dark" />
+<Image id="ZENGARDEN_BUGSPRAY_BOTTLE" path="ZenGarden_bugspray_bottle" />
+<Image id="STINKY_TURN3" path="Stinky_turn3" />
+<Image id="CRAZYDAVE_MOUTH1" path="CrazyDave_Mouth1" />
+<Image id="CRAZYDAVE_MOUTH4" path="CrazyDave_Mouth4" />
+<Image id="CRAZYDAVE_MOUTH5" path="CrazyDave_Mouth5" />
+<Image id="CRAZYDAVE_MOUTH6" path="CrazyDave_Mouth6" />
+<Image id="ZOMBIE_MUSTACHE2" path="Zombie_mustache2" />
+<Image id="ZOMBIE_MUSTACHE3" path="Zombie_mustache3" />
+  
+</Resources>
+
+<Resources id="LoadingSounds">
+  
+<SetDefaults path="sounds" idprefix="SOUND_" />
+<Sound id="AWOOGA" path="awooga" /> 
+<Sound id="BLEEP" path="bleep" /> 
+<Sound id="BUZZER" path="buzzer" />
+<Sound id="CHOMP" path="chomp" />
+<Sound id="CHOMP2" path="chomp2" />
+<Sound id="CHOMPSOFT" path="chompsoft" />
+<Sound id="EVILLAUGH" path="evillaugh" /> 
+<Sound id="FLOOP" path="floop" /> 
+<Sound id="FROZEN" path="frozen" /> 
+<Sound id="GULP" path="gulp" /> 
+<Sound id="GROAN" path="groan" /> 
+<Sound id="GROAN2" path="groan2" /> 
+<Sound id="GROAN3" path="groan3" /> 
+<Sound id="GROAN4" path="groan4" /> 
+<Sound id="GROAN5" path="groan5" /> 
+<Sound id="GROAN6" path="groan6" /> 
+<Sound id="LOSEMUSIC" path="losemusic" />
+<Sound id="MINDCONTROLLED" path="mindcontrolled" /> 
+<Sound id="PAUSE" path="pause" /> 
+<Sound id="PLANT" path="plant" /> 
+<Sound id="PLANT2" path="plant2" /> 
+<Sound id="POINTS" path="points" /> 
+<Sound id="SEEDLIFT" path="seedlift" /> 
+<Sound id="SIREN" path="siren" /> 
+<Sound id="SLURP" path="slurp" /> 
+<Sound id="SPLAT" path="splat" /> 
+<Sound id="SPLAT2" path="splat2" /> 
+<Sound id="SPLAT3" path="splat3" /> 
+<Sound id="SUKHBIR" path="sukhbir" /> 
+<Sound id="SUKHBIR2" path="sukhbir2" /> 
+<Sound id="SUKHBIR3" path="sukhbir3" /> 
+<Sound id="SUKHBIR4" path="sukhbir4" /> 
+<Sound id="SUKHBIR5" path="sukhbir5" /> 
+<Sound id="SUKHBIR6" path="sukhbir6" /> 
+<Sound id="TAP" path="tap" /> 
+<Sound id="TAP2" path="tap2" /> 
+<Sound id="THROW" path="throw" /> 
+<Sound id="THROW2" path="throw2" />
+<Sound id="BLOVER" path="blover" />
+<Sound id="WINMUSIC" path="winmusic" />
+<Sound id="LAWNMOWER" path="lawnmower" />
+<Sound id="BOING" path="boing" />
+<Sound id="JACKINTHEBOX" path="jackinthebox" />
+<Sound id="DIAMOND" path="diamond" />
+<Sound id="DOLPHIN_APPEARS" path="dolphin_appears" />
+<Sound id="DOLPHIN_BEFORE_JUMPING" path="dolphin_before_jumping" />
+<Sound id="POTATO_MINE" path="potato_mine" />
+<Sound id="ZAMBONI" path="zamboni" />
+<Sound id="BALLOON_POP" path="balloon_pop" />
+<Sound id="THUNDER" path="thunder" />
+<Sound id="ZOMBIESPLASH" path="zombiesplash" />
+<Sound id="BOWLING" path="bowling" />
+<Sound id="BOWLINGIMPACT" path="bowlingimpact" />
+<Sound id="BOWLINGIMPACT2" path="bowlingimpact2" />
+<Sound id="GRAVEBUSTERCHOMP" path="gravebusterchomp" />
+<Sound id="GRAVEBUTTON" path="gravebutton" />
+<Sound id="LIMBS_POP" path="limbs_pop" />
+<Sound id="PLANTERN" path="plantern" />
+<Sound id="POGO_ZOMBIE" path="pogo_zombie" />
+<Sound id="SNOW_PEA_SPARKLES" path="snow_pea_sparkles" />  
+<Sound id="PLANT_WATER" path="plant_water" />  
+<Sound id="ZOMBIE_ENTERING_WATER" path="zombie_entering_water" />  
+<Sound id="ZOMBIE_FALLING_1" path="zombie_falling_1" />  
+<Sound id="ZOMBIE_FALLING_2" path="zombie_falling_2" />
+<Sound id="PUFF" path="puff" />
+<Sound id="FUME" path="fume" />
+<Sound id="HUGE_WAVE" path="hugewave" />
+<Sound id="SLOT_MACHINE" path="slotmachine" />
+<Sound id="COIN" path="coin" />
+<Sound id="ROLL_IN" path="roll_in" />
+<Sound id="DIGGER_ZOMBIE" path="digger_zombie" />
+<Sound id="HATCHBACK_CLOSE" path="hatchback_close" />
+<Sound id="HATCHBACK_OPEN" path="hatchback_open" />
+<Sound id="KERNELPULT" path="kernelpult" />
+<Sound id="KERNELPULT2" path="kernelpult2" />
+<Sound id="ZOMBAQUARIUM_DIE" path="zombaquarium_die" />
+<Sound id="BUNGEE_SCREAM" path="bungee_scream" />
+<Sound id="BUNGEE_SCREAM2" path="bungee_scream2" />
+<Sound id="BUNGEE_SCREAM3" path="bungee_scream3" />
+<Sound id="BUTTER" path="butter" />
+<Sound id="JACK_SURPRISE" path="jack_surprise" />
+<Sound id="JACK_SURPRISE2" path="jack_surprise2" />
+<Sound id="NEWSPAPER_RARRGH" path="newspaper_rarrgh" />
+<Sound id="NEWSPAPER_RARRGH2" path="newspaper_rarrgh2" />
+<Sound id="NEWSPAPER_RIP" path="newspaper_rip" />
+<Sound id="SQUASH_HMM" path="squash_hmm" />
+<Sound id="SQUASH_HMM2" path="squash_hmm2" />
+<Sound id="VASE_BREAKING" path="vase_breaking" />
+<Sound id="POOL_CLEANER" path="pool_cleaner" />
+<Sound id="MAGNETSHROOM" path="magnetshroom" />
+<Sound id="LADDER_ZOMBIE" path="ladder_zombie" />
+<Sound id="GARGANTUAR_THUMP" path="gargantuar_thump" />
+<Sound id="BASKETBALL" path="basketball" />
+<Sound id="FIREPEA" path="firepea" />
+<Sound id="IGNITE" path="ignite" />
+<Sound id="IGNITE2" path="ignite2" />
+<Sound id="READYSETPLANT" path="readysetplant" />
+<Sound id="DOOMSHROOM" path="doomshroom" />
+<Sound id="EXPLOSION" path="explosion" />
+<Sound id="FINALWAVE" path="finalwave" />
+<Sound id="REVERSE_EXPLOSION" path="reverse_explosion" />
+<Sound id="RVTHROW" path="RVthrow" />
+<Sound id="SHIELDHIT" path="shieldhit" />
+<Sound id="SHIELDHIT2" path="shieldhit2" />
+<Sound id="BOSSEXPLOSION" path="bossexplosion" />
+<Sound id="CHERRYBOMB" path="cherrybomb" />
+<Sound id="BONK" path="bonk" />
+<Sound id="SWING" path="swing" />
+<Sound id="RAIN" path="rain" />
+<Sound id="LIGHTFILL" path="lightfill" />
+<Sound id="PLASTICHIT" path="plastichit" />
+<Sound id="PLASTICHIT2" path="plastichit2" />
+<Sound id="JALAPENO" path="jalapeno" />
+<Sound id="BALLOONINFLATE" path="ballooninflate" />
+<Sound id="BIGCHOMP" path="bigchomp" />
+<Sound id="MELONIMPACT" path="melonimpact" />
+<Sound id="MELONIMPACT2" path="melonimpact2" />
+<Sound id="PLANTGROW" path="plantgrow" />
+<Sound id="SHOOP" path="shoop" />
+<Sound id="TAPGLASS" path="tapglass" />
+<Sound id="JUICY" path="juicy" />
+<Sound id="COFFEE" path="coffee" />
+<Sound id="WAKEUP" path="wakeup" />
+<Sound id="LOWGROAN" path="lowgroan" />
+<Sound id="LOWGROAN2" path="lowgroan2" />
+<Sound id="PRIZE" path="prize" />
+<Sound id="YUCK" path="yuck" />
+<Sound id="YUCK2" path="yuck2" />
+<Sound id="GRASSSTEP" path="grassstep" />
+<Sound id="SHOVEL" path="shovel" />
+<Sound id="COBLAUNCH" path="coblaunch" />
+<Sound id="WATERING" path="watering" />
+<Sound id="POLEVAULT" path="polevault" />
+<Sound id="GRAVESTONE_RUMBLE" path="gravestone_rumble" />
+<Sound id="DIRT_RISE" path="dirt_rise" />
+<Sound id="FERTILIZER" path="fertilizer" />
+<Sound id="PORTAL" path="portal" />
+<Sound id="BUGSPRAY" path="bugspray" />
+<Sound id="SCREAM" path="scream" />
+<Sound id="PAPER" path="paper" />
+<Sound id="MONEYFALLS" path="moneyfalls" />
+<Sound id="IMP" path="imp" />
+<Sound id="IMP2" path="imp2" />
+<Sound id="HYDRAULIC_SHORT" path="hydraulic_short" />
+<Sound id="HYDRAULIC" path="hydraulic" />
+<Sound id="GARGANTUDEATH" path="gargantudeath" />
+<Sound id="CERAMIC" path="ceramic" />
+<Sound id="BOSSBOULDERATTACK" path="bossboulderattack" />
+<Sound id="CHIME" path="chime" />
+<Sound id="CRAZYDAVESHORT1" path="crazydaveshort1" />
+<Sound id="CRAZYDAVESHORT2" path="crazydaveshort2" />
+<Sound id="CRAZYDAVESHORT3" path="crazydaveshort3" />
+<Sound id="CRAZYDAVELONG1" path="crazydavelong1" />
+<Sound id="CRAZYDAVELONG2" path="crazydavelong2" />
+<Sound id="CRAZYDAVELONG3" path="crazydavelong3" />
+<Sound id="CRAZYDAVEEXTRALONG1" path="crazydaveextralong1" />
+<Sound id="CRAZYDAVEEXTRALONG2" path="crazydaveextralong2" />
+<Sound id="CRAZYDAVEEXTRALONG3" path="crazydaveextralong3" />
+<Sound id="CRAZYDAVECRAZY" path="crazydavecrazy" />
+<Sound id="PHONOGRAPH" path="phonograph" />
+<Sound id="DANCER" path="dancer" />
+<Sound id="FINALFANFARE" path="finalfanfare" />
+<Sound id="CRAZYDAVESCREAM" path="crazydavescream" />
+<Sound id="CRAZYDAVESCREAM2" path="crazydavescream2" />
+
+</Resources>
+
+<Resources id="DelayLoad_Background1">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="BACKGROUND1" path="background1" ddsurface="" a8r8g8b8="" />
+<Image id="BACKGROUND1_GAMEOVER_INTERIOR_OVERLAY" path="background1_gameover_interior_overlay" />
+<Image id="BACKGROUND1_GAMEOVER_MASK" path="background1_gameover_mask" />
+<Image id="BD0" path="BD0" />
+<Image id="BD1" path="BD1" />
+<Image id="BD2" path="BD2" />
+<Image id="BD3" path="BD3" />
+<Image id="BD4" path="BD4" />
+</Resources>
+  
+<Resources id="DelayLoad_BackgroundUnsodded">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="BACKGROUND1UNSODDED" path="background1unsodded" ddsurface="" a8r8g8b8="" />
+<Image id="SOD1ROW" path="sod1row" ddsurface="" />
+<Image id="SOD3ROW" path="sod3row" ddsurface="" />
+</Resources>
+  
+<Resources id="DelayLoad_Background2">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="BACKGROUND2" path="background2" ddsurface="" a8r8g8b8="" />
+<Image id="BACKGROUND2_GAMEOVER_INTERIOR_OVERLAY" path="background2_gameover_interior_overlay" />
+<Image id="BACKGROUND2_GAMEOVER_MASK" path="background2_gameover_mask" />
+<Image id="BN0" path="BN0" />
+<Image id="BN1" path="BN1" />
+<Image id="BN2" path="BN2" />
+<Image id="BN3" path="BN3" />
+<Image id="BN4" path="BN4" />
+</Resources>
+  
+<Resources id="DelayLoad_Background3">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="BACKGROUND3" path="background3" ddsurface="" a8r8g8b8="" />
+<Image id="BACKGROUND3_GAMEOVER_INTERIOR_OVERLAY" path="background3_gameover_interior_overlay" />
+<Image id="BACKGROUND3_GAMEOVER_MASK" path="background3_gameover_mask" />
+<Image id="BP0" path="BP0" />
+<Image id="BP1" path="BP1" />
+<Image id="BP2" path="BP2" />
+<Image id="BP3" path="BP3" />
+<Image id="BP4" path="BP4" />
+<Image id="BP5" path="BP5" />
+</Resources>
+
+<Resources id="DelayLoad_Background4">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="BACKGROUND4" path="background4" ddsurface="" a8r8g8b8="" />
+<Image id="BACKGROUND4_GAMEOVER_INTERIOR_OVERLAY" path="background4_gameover_interior_overlay" />
+<Image id="BACKGROUND4_GAMEOVER_MASK" path="background4_gameover_mask" />
+<Image id="FOG" path="fog" cols="8" />
+<Image id="FOG_SOFTWARE" path="fog_software" cols="3" />
+<Image id="BF0" path="BF0" />
+<Image id="BF1" path="BF1" />
+<Image id="BF2" path="BF2" />
+<Image id="BF3" path="BF3" />
+<Image id="BF4" path="BF4" />
+<Image id="BF5" path="BF5" />
+</Resources>
+  
+<Resources id="DelayLoad_Background5">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="BACKGROUND5" path="background5" ddsurface="" a8r8g8b8="" />
+<Image id="BACKGROUND5_GAMEOVER_MASK" path="background5_gameover_mask" />
+<Image id="POLE" path="pole" />
+</Resources>
+  
+<Resources id="DelayLoad_Background6">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="BACKGROUND6BOSS" path="background6boss" ddsurface="" a8r8g8b8="" />
+<Image id="BACKGROUND6_GAMEOVER_MASK" path="background6_gameover_mask" />
+<Image id="POLE_NIGHT" path="pole_night" />
+</Resources>
+  
+<Resources id="DelayLoad_MushroomGarden">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="BACKGROUND_MUSHROOMGARDEN" path="Background_MushroomGarden" />
+</Resources>
+
+<Resources id="DelayLoad_GreenHouseGarden">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="BACKGROUND_GREENHOUSE" path="Background_Greenhouse" />
+</Resources>
+
+<Resources id="DelayLoad_GreenHouseOverlay">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="BACKGROUND_GREENHOUSE_OVERLAY" path="Background_greenhouse_overlay" />
+</Resources>
+
+<Resources id="DelayLoad_Zombiquarium">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="AQUARIUM1" path="aquarium1" a8r8g8b8="" />
+<Image id="WAVECENTER" path="wavecenter" rows="12" />
+<Image id="WAVESIDE" path="waveside" rows="12" />
+</Resources>  
+
+<Resources id="DelayLoad_TreeOfWisdom">
+<SetDefaults path="images" idprefix="IMAGE_" />
+</Resources>
+  
+<Resources id="DelayLoad_AwardScreen">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="AWARDSCREEN_BACK" path="AwardScreen_Back" a8r8g8b8="" />
+</Resources>  
+
+<Resources id="DelayLoad_ChallengeScreen">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="CHALLENGE_BACKGROUND" path="Challenge_Background" a8r8g8b8="" />
+<Image id="CHALLENGE_WINDOW" path="Challenge_Window" />
+<Image id="CHALLENGE_WINDOW_HIGHLIGHT" path="Challenge_Window_Highlight" />
+<Image id="CHALLENGE_BLANK" path="Challenge_Blank" />
+<Image id="CHALLENGE_THUMBNAILS" path="Challenge_Thumbnails" cols="22" />
+<Image id="SURVIVAL_THUMBNAILS" path="Survival_Thumbnails" cols="11" />
+<Image id="LOCK" path="lock" />
+<Image id="LOCK_OPEN" path="lock_open" />
+</Resources>  
+
+<Resources id="DelayLoad_Almanac">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="ALMANAC_INDEXBACK" path="Almanac_IndexBack" a8r8g8b8="" />
+<Image id="ALMANAC_PLANTBACK" path="Almanac_PlantBack" />
+<Image id="ALMANAC_ZOMBIEBACK" path="Almanac_ZombieBack" />
+<Image id="ALMANAC_PLANTCARD" path="Almanac_PlantCard" />
+<Image id="ALMANAC_ZOMBIECARD" path="Almanac_ZombieCard" />
+<Image id="ALMANAC_ZOMBIEWINDOW" path="Almanac_ZombieWindow" />
+<Image id="ALMANAC_ZOMBIEWINDOW2" path="Almanac_ZombieWindow2" />
+<Image id="ALMANAC_ZOMBIEBLANK" path="Almanac_ZombieBlank" />
+<Image id="ALMANAC_GROUNDDAY" path="Almanac_GroundDay" />
+<Image id="ALMANAC_GROUNDNIGHT" path="Almanac_GroundNight" />
+<Image id="ALMANAC_GROUNDPOOL" path="Almanac_GroundPool" />
+<Image id="ALMANAC_GROUNDNIGHTPOOL" path="Almanac_GroundNightPool" />
+<Image id="ALMANAC_GROUNDROOF" path="Almanac_GroundRoof" />
+<Image id="ALMANAC_GROUNDICE" path="Almanac_GroundIce" />
+<Image id="ALMANAC_CLOSEBUTTON" path="Almanac_CloseButton" />
+<Image id="ALMANAC_CLOSEBUTTONHIGHLIGHT" path="Almanac_CloseButtonHighlight" />
+<Image id="ALMANAC_INDEXBUTTON" path="Almanac_IndexButton" />
+<Image id="ALMANAC_INDEXBUTTONHIGHLIGHT" path="Almanac_IndexButtonHighlight" />
+</Resources>
+
+<Resources id="DelayLoad_Store">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="STORE_BACKGROUND" path="Store_Background" />
+<Image id="STORE_BACKGROUNDNIGHT" path="Store_BackgroundNight" />
+<Image id="STORE_CAR" path="Store_Car" />
+<Image id="STORE_CAR_NIGHT" path="Store_Car_Night" />
+<Image id="STORE_CARCLOSED" path="Store_CarClosed" />
+<Image id="STORE_CARCLOSED_NIGHT" path="Store_CarClosed_Night" />
+<Image id="STORE_HATCHBACKOPEN" path="Store_HatchbackOpen" />
+<Image id="STORE_SIGN" path="Store_Sign" />
+<Image id="STORE_MAINMENUBUTTON" path="Store_MainMenuButton" />
+<Image id="STORE_MAINMENUBUTTONDOWN" path="Store_MainMenuButtonDown" />
+<Image id="STORE_MAINMENUBUTTONHIGHLIGHT" path="Store_MainMenuButtonHighlight" />
+<Image id="STORE_NEXTBUTTON" path="Store_NextButton" />
+<Image id="STORE_NEXTBUTTONHIGHLIGHT" path="Store_NextButtonHighlight" />
+<Image id="STORE_NEXTBUTTONDISABLED" path="Store_NextButtonDisabled" />
+<Image id="STORE_PREVBUTTON" path="Store_PrevButton" />
+<Image id="STORE_PREVBUTTONHIGHLIGHT" path="Store_PrevButtonHighlight" />
+<Image id="STORE_PREVBUTTONDISABLED" path="Store_PrevButtonDisabled" />
+<Image id="STORE_PRICETAG" path="Store_PriceTag" />
+<Image id="STORE_PACKETUPGRADE" path="Store_PacketUpgrade" />
+<Image id="STORE_MUSHROOMGARDENICON" path="Store_MushroomGardenIcon" />
+<Image id="STORE_AQUARIUMGARDENICON" path="Store_AquariumGardenIcon" />
+<Image id="STORE_TREEOFWISDOMICON" path="Store_TreeOfWisdomIcon" />
+<Image id="STORE_FIRSTAIDWALLNUTICON" path="Store_FirstAidWallnutIcon" />  
+<Image id="STORE_PVZICON" path="Store_PvZIcon" />  
+</Resources>
+
+<Resources id="DelayLoad_ZombieNote">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="ZOMBIE_NOTE" path="ZombieNote" />
+</Resources>
+
+<Resources id="DelayLoad_ZombieNote1">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="ZOMBIE_NOTE1" path="ZombieNoteBlack1" alphagrid="ZombieNote1" />
+</Resources>
+
+<Resources id="DelayLoad_ZombieNote2">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="ZOMBIE_NOTE2" path="ZombieNoteBlack2" alphagrid="ZombieNote2" />
+</Resources>
+
+<Resources id="DelayLoad_ZombieNote3">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="ZOMBIE_NOTE3" path="ZombieNoteBlack3" alphagrid="ZombieNote3" />
+</Resources>
+
+<Resources id="DelayLoad_ZombieNote4">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="ZOMBIE_NOTE4" path="ZombieNoteBlack4" alphagrid="ZombieNote4" />
+</Resources>
+
+<Resources id="DelayLoad_ZombieFinalNote">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="ZOMBIE_FINAL_NOTE" path="ZombieFinalNoteBlack" alphagrid="ZombieFinalNote" />
+</Resources>
+
+<Resources id="DelayLoad_ZombieNoteHelp">
+<SetDefaults path="images" idprefix="IMAGE_" />
+<Image id="ZOMBIE_NOTE_HELP" path="ZombieNoteHelpBlack" alphagrid="ZombieNoteHelp" />
+</Resources>
+
+<Resources id="DelayLoad_Credits">
+  <SetDefaults path="data" idprefix="FONT_" />
+  <Font id="BRIANNETOD32" path="BrianneTod32.txt" />
+  <Font id="BRIANNETOD32BLACK" path="BrianneTod32Black.txt" />
+  
+  <SetDefaults path="reanim" idprefix="IMAGE_REANIM_" />
+  <Image id="SUNFLOWER_HEAD_SING1" path="SunFlower_head_sing1" />
+  <Image id="SUNFLOWER_HEAD_SING2" path="SunFlower_head_sing2" />
+  <Image id="SUNFLOWER_HEAD_SING3" path="SunFlower_head_sing3" />
+  <Image id="SUNFLOWER_HEAD_SING4" path="SunFlower_head_sing4" />
+  <Image id="SUNFLOWER_HEAD_SING5" path="SunFlower_head_sing5" />
+  <Image id="SUNFLOWER_HEAD_WINK" path="SunFlower_head_wink" />
+  <Image id="CREDITS_DISCOLIGHTS" path="Credits_DiscoLights" />
+  <Image id="CREDITS_FOGMACHINE" path="Credits_fogmachine" />
+  
+  <SetDefaults path="images" idprefix="IMAGE_" />
+  <Image id="CREDITS_ZOMBIENOTE" path="Credits_ZombieNoteBlack" alphagrid="Credits_ZombieNote" />
+  <Image id="CREDITS_PLAYBUTTON" path="Credits_PlayButton" />
+</Resources>
+
+</ResourceManifest>

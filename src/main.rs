@@ -87,7 +87,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         patch_titlescreen()?;
         patch_zengarden()?;
 
-        // std::thread::sleep(std::time::Duration::from_secs(10));
+        //std::thread::sleep(std::time::Duration::from_secs(15));
         NtResumeProcess(H_PROCESS);
     }
     Ok(())
