@@ -41,5 +41,12 @@ pub unsafe fn patch_zengarden() -> Result<(), Box<dyn Error>> {
     code.jmp(0x43BA69)?;
     inject(0x43BA64, code);
 
+    // Draw image of zen garden background with -PAD offset (Board::DrawBackdrop)
+    let mut code = CodeAssembler::new(32)?;
+    code.mov(dword_ptr(esp), -PAD as i32)?;
+    code.call(0x587150)?;
+    code.jmp(0x4164A9)?;
+    inject(0x4164A4, code);
+
     Ok(())
 }
