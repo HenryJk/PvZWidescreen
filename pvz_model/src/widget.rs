@@ -1,10 +1,8 @@
 #![allow(non_snake_case)]
 
-use std::ffi::c_void;
-
 use crate::{
-    stub::{StdList, StdVector},
-    Graphics, MemoryImage, SexyAppBase, TRect,
+    stub::{StdBasicString, StdList, StdVector},
+    ButtonListener, Color, Font, Graphics, Image, MemoryImage, SexyAppBase, TRect,
 };
 
 #[repr(C)]
@@ -25,8 +23,8 @@ pub struct Insets {
 pub struct WidgetContainer {
     unknown: [u8; 4],
     pub mWidgets: StdList,
-    pub mWidgetManager: *const c_void,
-    pub mParent: *const WidgetContainer,
+    pub mWidgetManager: *mut WidgetManager,
+    pub mParent: *mut WidgetContainer,
     pub mUpdateIteratorModified: bool,
     pub mUpdateIterator: [u8; 8],
     pub mLastWMUpdateCount: u32,
@@ -62,7 +60,41 @@ pub struct Widget {
 }
 
 #[repr(C)]
+pub struct ButtonWidget {
+    pub base: Widget,
+    pub mId: i32,
+    pub mLabel: StdBasicString,
+    pub mLabelJustify: i32,
+    pub mFont: *mut Font,
+    pub mButtonImage: *mut Image,
+    pub mOverImage: *mut Image,
+    pub mDownImage: *mut Image,
+    pub mDisabledImage: *mut Image,
+    pub mNormalRect: TRect<i32>,
+    pub mOverRect: TRect<i32>,
+    pub mDownRect: TRect<i32>,
+    pub mDisabledRect: TRect<i32>,
+    pub mInverted: bool,
+    pub mBtnNoDraw: bool,
+    pub mFrameNoDraw: bool,
+    pub mButtonListener: *mut ButtonListener,
+    pub mOverAlpha: f64,
+    pub mOverAlphaSpeed: f64,
+    pub mOverAlphaFadeInSpeed: f64,
+}
+
+#[repr(C)]
+pub struct HyperlinkWidget {
+    pub base: ButtonWidget,
+    pub mColor: Color,
+    pub mOverColor: Color,
+    pub mUnderlineSize: i32,
+    pub mUnderlineOffset: i32,
+}
+
+#[repr(C)]
 pub struct WidgetManager {
+    pub base: WidgetContainer,
     pub mDefaultTab: *mut Widget,
     pub mCurG: *mut Graphics,
     pub mApp: *mut SexyAppBase,
@@ -80,7 +112,7 @@ pub struct WidgetManager {
     pub mLostFocusFlagsMod: FlagsMod,
     pub mBelowModalFlagsMod: FlagsMod,
     pub mDefaultBelowModalFlagsMod: FlagsMod,
-    pub mPreModalInfoList: FlagsMod,
+    pub mPreModalInfoList: StdList,
     pub mMouseDestRect: TRect<i32>,
     pub mMouseSourceRect: TRect<i32>,
     pub mMouseIn: bool,
@@ -92,4 +124,41 @@ pub struct WidgetManager {
     pub mKeyDown: [bool; 255],
     pub mLastDownButtonId: i32,
     pub mWidgetFlags: i32,
+}
+
+#[cfg(test)]
+mod tests {
+    use std::mem::size_of;
+
+    use crate::{ButtonWidget, FlagsMod, Insets, Widget, WidgetContainer, WidgetManager};
+
+    #[test]
+    fn check_FlagsMod_size() {
+        assert_eq!(size_of::<FlagsMod>(), 8);
+    }
+
+    #[test]
+    fn check_Insets_size() {
+        assert_eq!(size_of::<Insets>(), 16);
+    }
+
+    #[test]
+    fn check_WidgetContainer_size() {
+        assert_eq!(size_of::<WidgetContainer>(), 84);
+    }
+
+    #[test]
+    fn check_Widget_size() {
+        assert_eq!(size_of::<Widget>(), 136);
+    }
+
+    #[test]
+    fn check_ButtonWidget_size() {
+        assert_eq!(size_of::<ButtonWidget>(), 288);
+    }
+
+    #[test]
+    fn check_WidgetManager_size() {
+        assert_eq!(size_of::<WidgetManager>(), 508);
+    }
 }

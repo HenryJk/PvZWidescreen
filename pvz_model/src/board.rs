@@ -3,24 +3,24 @@
 use std::ffi::c_void;
 
 use crate::{
-    AdviceType, BackgroundType, BoardResult, Coin, DataArray, DebugTextMode, GridItem,
-    GridSquareType, LawnMower, Plant, PlantRowType, Projectile, TodSmoothArray, TutorialState,
-    Widget, Zombie, ZombieType,
+    AdviceType, BackgroundType, BoardResult, Coin, CursorObject, CursorPreview, DataArray,
+    DebugTextMode, GridItem, GridSquareType, LawnApp, LawnMower, Plant, PlantRowType, Projectile,
+    TodSmoothArray, TutorialState, Widget, Zombie, ZombieType,
 };
 
 #[repr(C)]
 pub struct Board {
     pub base: Widget,
     unknown: [u8; 4],
-    pub mApp: *const c_void,
+    pub mApp: *mut LawnApp,
     pub mZombies: DataArray<Zombie>,
     pub mPlants: DataArray<Plant>,
     pub mProjectiles: DataArray<Projectile>,
     pub mCoins: DataArray<Coin>,
     pub mLawnMowers: DataArray<LawnMower>,
     pub mGridItems: DataArray<GridItem>,
-    pub mCursorObject: *const c_void,
-    pub mCursorPreview: *const c_void,
+    pub mCursorObject: *mut CursorObject,
+    pub mCursorPreview: *mut CursorPreview,
     pub mAdvice: *const c_void,
     pub mSeedBank: *const c_void,
     pub mMenuButton: *const c_void,
@@ -126,4 +126,39 @@ pub struct Board {
     pub mDiamondsCollected: i32,
     pub mPottedPlantsCollected: i32,
     pub mChocolateCollected: i32,
+}
+
+impl Board {
+    pub fn TotalZombiesHealthInWave(&self, wave: i32) -> i32 {
+        self.mZombies
+            .into_iter()
+            .map(|zombie| {
+                if zombie.mFromWave == wave
+                    && !zombie.mMindControlled
+                    && !zombie.IsDeadOrDying()
+                    && !matches!(zombie.mZombieType, ZombieType::Bungee)
+                    && zombie.mRelatedZombieID == 0
+                {
+                    zombie.mBodyHealth
+                        + zombie.mHelmHealth
+                        + (zombie.mShieldHealth + 2) / 5
+                        + zombie.mFlyingHealth
+                } else {
+                    0
+                }
+            })
+            .sum()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::mem::size_of;
+
+    use crate::Board;
+
+    #[test]
+    fn check_Board_size() {
+        assert_eq!(size_of::<Board>(), 22448);
+    }
 }

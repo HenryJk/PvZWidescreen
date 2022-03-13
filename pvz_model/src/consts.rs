@@ -1,3 +1,5 @@
+use crate::TodParticleDefinition;
+
 #[repr(i32)]
 pub enum AdviceType {
     ClickOnSun = 0,
@@ -1293,6 +1295,7 @@ pub enum ZombieHeight {
 }
 
 #[repr(i32)]
+#[derive(PartialEq)]
 pub enum ZombiePhase {
     ZombieNormal = 0,
     ZombieDying = 1,
@@ -1430,3 +1433,6 @@ pub enum ZombieType {
     Zombatar = 33,
     Invalid = -1,
 }
+
+pub(crate) const G_PARTICLE_DEF_ARRAY: *const *const TodParticleDefinition =
+    0x6A9F0C as *const *const TodParticleDefinition;

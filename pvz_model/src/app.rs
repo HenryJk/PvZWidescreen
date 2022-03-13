@@ -7,8 +7,14 @@ use windows::Win32::{
 };
 
 use crate::{
-    stub::{ResourceManager, StdBasicString, StdList, StdMap, StdSet},
-    Buffer, DDInterface, MusicInterface, Ratio, SoundManager, TRect, WidgetManager,
+    stub::{
+        AwardScreen, BetaSupport, ChallengeScreen, CreditScreen, EffectSystem, GameSelector,
+        InternetManager, LevelStats, Music, PlayerInfo, PoolEffect, PopDRMComm, ProfileMgr,
+        ReanimatorCache, ResourceManager, SeedChooserScreen, StdBasicString, StdList, StdMap,
+        StdSet, TodFoley, ZenGarden,
+    },
+    Board, BoardResult, Buffer, CrazyDaveState, DDInterface, GameMode, GameScenes, MusicInterface,
+    Ratio, SoundManager, TRect, TitleScreen, TypingCheck, WidgetManager,
 };
 
 #[repr(C)]
@@ -27,7 +33,6 @@ pub struct SexyAppBase {
     pub mWidth: i32,
     pub mHeight: i32,
     pub mFullscreenBits: i32,
-    unknown1: [u8; 4],
     pub mMusicVolume: f64,
     pub mSfxVolume: f64,
     pub mDemoMusicVolume: f64,
@@ -200,5 +205,126 @@ pub struct SexyAppBase {
     pub mStringVectorProperties: StdMap,
     pub mResourceManager: *mut ResourceManager,
     pub mOldWndProc: i32,
-    pub unknown3: [u8; 4],
+}
+
+#[repr(C)]
+pub struct SexyApp {
+    pub base: SexyAppBase,
+    pub mInternetManager: *mut InternetManager,
+    pub mBetaSupport: *mut BetaSupport,
+    pub mBetaSupportSiteOverride: StdBasicString,
+    pub mBetaSupportProdNameOverride: StdBasicString,
+    pub mReferId: StdBasicString,
+    pub mVariation: StdBasicString,
+    pub mDownloadId: u32,
+    pub mRegSource: StdBasicString,
+    pub mLastVerCheckQueryTime: u32,
+    pub mSkipAd: bool,
+    pub mDontUpdate: bool,
+    pub mBuildNum: i32,
+    pub mBuildDate: StdBasicString,
+    pub mUserName: StdBasicString,
+    pub mRegUserName: StdBasicString,
+    pub mRegCode: StdBasicString,
+    pub mIsRegistered: bool,
+    pub mBuildUnlocked: bool,
+    pub mTimesPlayed: i32,
+    pub mTimesExecuted: i32,
+    pub mTimedOut: bool,
+}
+
+#[repr(C)]
+pub struct LawnApp {
+    pub base: SexyApp,
+    pub mBoard: *mut Board,
+    pub mTitleScreen: *mut TitleScreen,
+    pub mGameSelector: *mut GameSelector,
+    pub mSeedChooserScreen: *mut SeedChooserScreen,
+    pub mAwardScreen: *mut AwardScreen,
+    pub mCreditScreen: *mut CreditScreen,
+    pub mChallengeScreen: *mut ChallengeScreen,
+    pub mSoundSystem: *mut TodFoley,
+    pub mControlButtonList: StdList,
+    pub mCreatedImageList: StdList,
+    pub mReferId: StdBasicString,
+    pub mRegisterLink: StdBasicString,
+    pub mMod: StdBasicString,
+    pub mRegisterResourcesLoaded: bool,
+    pub mTodCheatKeys: bool,
+    pub mGameMode: GameMode,
+    pub mGameScene: GameScenes,
+    pub mLoadingZombiesThreadCompleted: bool,
+    pub mFirstTimeGameSelector: bool,
+    pub mGamesPlayed: i32,
+    pub mMaxExecutions: i32,
+    pub mMaxPlays: i32,
+    pub mMaxTime: i32,
+    pub mEasyPlantingCheat: bool,
+    pub mPoolEffect: *mut PoolEffect,
+    pub mZenGarden: *mut ZenGarden,
+    pub mEffectSystem: *mut EffectSystem,
+    pub mReanimatorCache: *mut ReanimatorCache,
+    pub mProfileMgr: *mut ProfileMgr,
+    pub mPlayerInfo: *mut PlayerInfo,
+    pub mLastLevelStats: *mut LevelStats,
+    pub mCloseRequest: bool,
+    pub mAppCounter: i32,
+    pub mMusic: *mut Music,
+    pub mCrazyDaveReanimID: i32,
+    pub mCrazyDaveState: CrazyDaveState,
+    pub mCrazyDaveBlinkCounter: i32,
+    pub mCrazyDaveBlinkReanimID: i32,
+    pub mCrazyDaveMessageIndex: i32,
+    pub mCrazyDaveMessageText: StdBasicString,
+    pub mAppRandSeed: i32,
+    pub mBigArrowCursor: *mut HICON,
+    pub mDRM: *mut PopDRMComm,
+    pub mSessionID: i32,
+    pub mPlayTimeActiveSession: i32,
+    pub mPlayTimeInactiveSession: i32,
+    pub mBoardResult: BoardResult,
+    pub mKilledYetiAndRestarted: bool,
+    pub mKonamiCheck: *mut TypingCheck,
+    pub mMustacheCheck: *mut TypingCheck,
+    pub mMoustacheCheck: *mut TypingCheck,
+    pub mSuperMowerCheck: *mut TypingCheck,
+    pub mSuperMowerCheck2: *mut TypingCheck,
+    pub mFutureCheck: *mut TypingCheck,
+    pub mPinataCheck: *mut TypingCheck,
+    pub mDaisyCheck: *mut TypingCheck,
+    pub mSukhbirCheck: *mut TypingCheck,
+    pub mMustacheMode: bool,
+    pub mSuperMowerMode: bool,
+    pub mFutureMode: bool,
+    pub mPinataMode: bool,
+    pub mDaisyMode: bool,
+    pub mSukhbirMode: bool,
+}
+
+impl LawnApp {
+    pub unsafe fn instance() -> &'static mut Self {
+        &mut *(*(0x6A9EC0 as *mut *mut LawnApp))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::mem::size_of;
+
+    use crate::{LawnApp, SexyApp, SexyAppBase};
+
+    #[test]
+    fn check_SexyAppBase_size() {
+        assert_eq!(size_of::<SexyAppBase>(), 1600);
+    }
+
+    #[test]
+    fn check_SexyApp_size() {
+        assert_eq!(size_of::<SexyApp>(), 1896);
+    }
+
+    #[test]
+    fn check_LawnApp_size() {
+        assert_eq!(size_of::<LawnApp>(), 2240);
+    }
 }

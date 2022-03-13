@@ -4,10 +4,10 @@ use serde::Deserialize;
 
 #[derive(Deserialize, Default)]
 pub struct Config {
-    pub visibility: Option<String>,
     pub color: Option<String>,
-    pub plant_hb_visible: Option<bool>,
-    pub zombie_hb_visible: Option<bool>,
+    pub plant_hb_visibility: Option<String>,
+    pub zombie_hb_visibility: Option<String>,
+    pub wave_meter_visibility: Option<bool>
 }
 
 impl Config {

@@ -1,6 +1,9 @@
 use core::arch::asm;
 
-use std::error::Error;
+use std::{
+    cmp::{max, min},
+    error::Error,
+};
 
 use config::Config;
 use iced_x86::code_asm::*;
@@ -24,10 +27,10 @@ enum HealthBarColor {
     Teamcolor,
 }
 
-static mut HB_VISIBILITY: HealthBarVisibility = HealthBarVisibility::Damaged;
 static mut HB_COLOR: HealthBarColor = HealthBarColor::Default;
-static mut PLANT_HB_VISIBLE: bool = true;
-static mut ZOMBIE_HB_VISIBLE: bool = false;
+static mut PLANT_HB_VISIBILITY: HealthBarVisibility = HealthBarVisibility::Damaged;
+static mut ZOMBIE_HB_VISIBILITY: HealthBarVisibility = HealthBarVisibility::Never;
+static mut WAVE_METER_VISIBILITY: bool = true;
 
 #[inline]
 fn fill_rect(this: &mut pvz::Graphics, color: pvz::Color, x: i32, y: i32, width: i32, height: i32) {
@@ -70,12 +73,28 @@ fn draw_health_bar(
     fill_rect(graphics, dark_gray, x + width, y, max_width - width, 3);
 }
 
+#[inline]
+fn draw_vert_hb(
+    graphics: &mut pvz::Graphics,
+    hb_color: pvz::Color,
+    x: i32,
+    y: i32,
+    height: i32,
+    max_height: i32,
+) {
+    let black = pvz::Color::new(0x000000FF);
+    let dark_gray = pvz::Color::new(0x303030FF);
+    fill_rect(graphics, black, x - 1, y - 1, 7, max_height + 2);
+    fill_rect(graphics, hb_color, x, y + max_height - height, 5, height);
+    fill_rect(graphics, dark_gray, x, y, 5, max_height - height);
+}
+
 fn draw_plant_health_bar(graphics: &mut pvz::Graphics, plant: &pvz::Plant) {
     if plant.mDead || plant.mSquished {
         return;
     }
 
-    if let HealthBarVisibility::Damaged = unsafe { HB_VISIBILITY } {
+    if let HealthBarVisibility::Damaged = unsafe { PLANT_HB_VISIBILITY } {
         if plant.mPlantHealth == plant.mPlantMaxHealth {
             return;
         }
@@ -113,6 +132,7 @@ fn draw_plant_health_bar(graphics: &mut pvz::Graphics, plant: &pvz::Plant) {
     );
 }
 
+#[inline]
 fn calc_health_color(hp_fraction: f32) -> pvz::Color {
     pvz::Color {
         mRed: (255.0 * (1.0 - hp_fraction).sqrt()) as i32,
@@ -129,7 +149,7 @@ fn draw_zombie_health_bar(graphics: &mut pvz::Graphics, zombie: &pvz::Zombie) {
     if let pvz::ZombieType::Boss = zombie.mZombieType {
         return;
     }
-    if let HealthBarVisibility::Damaged = unsafe { HB_VISIBILITY } {
+    if let HealthBarVisibility::Damaged = unsafe { ZOMBIE_HB_VISIBILITY } {
         if zombie.mBodyHealth == zombie.mBodyMaxHealth
             && zombie.mHelmHealth == zombie.mHelmMaxHealth
             && zombie.mShieldHealth == zombie.mShieldMaxHealth
@@ -179,22 +199,85 @@ fn draw_zombie_health_bar(graphics: &mut pvz::Graphics, zombie: &pvz::Zombie) {
     );
 }
 
-#[no_mangle]
-unsafe extern "cdecl" fn draw_all_health_bar(board: &pvz::Board, graphics: &mut pvz::Graphics) {
-    if let HealthBarVisibility::Never = HB_VISIBILITY {
-        return;
+unsafe fn draw_wave_meter(board: &mut pvz::Board, graphics: &mut pvz::Graphics) {
+    match &(*board.mApp).mGameMode {
+        pvz::GameMode::ChallengeZombiquarium
+        | pvz::GameMode::ChallengeSquirrel
+        | pvz::GameMode::TreeOfWisdom
+        | pvz::GameMode::ChallengeZenGarden
+        | pvz::GameMode::ChallengeFinalBoss => return,
+        pvz::GameMode::Adventure => {
+            if board.mLevel == 50 {
+                return;
+            }
+        }
+        _ => {}
     }
 
-    if PLANT_HB_VISIBLE {
+    let zombie_head_image =
+        (*(pvz::TodParticleDefinition::get(pvz::ParticleEffect::ZombieHead).mEmitterDefs)).mImage;
+
+    let old_scale_x = graphics.state.mScaleX;
+    let old_scale_y = graphics.state.mScaleY;
+    graphics.state.mScaleX = 0.5 * old_scale_x;
+    graphics.state.mScaleY = 0.5 * old_scale_y;
+    graphics.DrawImage(
+        zombie_head_image,
+        1700 + board.base.base.mX,
+        700 + board.base.base.mY,
+    );
+    graphics.state.mScaleX = old_scale_x;
+    graphics.state.mScaleY = old_scale_y;
+
+    let meter_height: i32;
+    let meter_color: pvz::Color;
+
+    if board.mCurrentWave == 0 {
+        meter_height = 100 - 100 * board.mZombieCountDown / board.mZombieCountDownStart;
+        meter_color = pvz::Color::new(0xFFFFFFFF);
+    } else if board.mHugeWaveCountDown > 0 {
+        meter_height = 100 - 100 * board.mHugeWaveCountDown / 750;
+        meter_color = pvz::Color::new(0xA10B0BFF);
+    } else if board.mZombieCountDown <= 200 {
+        meter_height = 100 - 100 * board.mZombieCountDown / 200;
+        meter_color = pvz::Color::new(0xFFFFFFFF);
+    } else {
+        meter_height = 100
+            * (board.TotalZombiesHealthInWave(board.mCurrentWave - 1)
+                - board.mZombieHealthToNextWave)
+            / (board.mZombieHealthWaveStart - board.mZombieHealthToNextWave);
+        meter_color = pvz::Color::new(0xFF7F0EFF);
+    }
+
+    draw_vert_hb(
+        graphics,
+        meter_color,
+        863,
+        250,
+        min(max(meter_height, 0), 100),
+        100,
+    );
+}
+
+#[no_mangle]
+unsafe extern "cdecl" fn draw_all_health_bar(board: *mut pvz::Board, graphics: *mut pvz::Graphics) {
+    let board = &mut *board;
+    let graphics = &mut *graphics;
+
+    if !matches!(PLANT_HB_VISIBILITY, HealthBarVisibility::Never) {
         for plant in &board.mPlants {
             draw_plant_health_bar(graphics, plant);
         }
     }
 
-    if ZOMBIE_HB_VISIBLE {
+    if !matches!(ZOMBIE_HB_VISIBILITY, HealthBarVisibility::Never) {
         for zombie in &board.mZombies {
             draw_zombie_health_bar(graphics, zombie);
         }
+    }
+
+    if WAVE_METER_VISIBILITY {
+        draw_wave_meter(board, graphics);
     }
 }
 
@@ -222,17 +305,7 @@ pub extern "stdcall" fn DllMain(
     match fdw_reason {
         DLL_PROCESS_ATTACH => {
             let config = Config::get_config();
-            if let Some(visibility) = config.visibility {
-                unsafe {
-                    if visibility == "Never" {
-                        HB_VISIBILITY = HealthBarVisibility::Never;
-                    } else if visibility == "Damaged" {
-                        HB_VISIBILITY = HealthBarVisibility::Damaged;
-                    } else if visibility == "Always" {
-                        HB_VISIBILITY = HealthBarVisibility::Always;
-                    }
-                }
-            }
+
             if let Some(color) = config.color {
                 unsafe {
                     if color == "Default" {
@@ -242,17 +315,32 @@ pub extern "stdcall" fn DllMain(
                     }
                 }
             }
-            if let Some(plant_hb_visible) = config.plant_hb_visible {
+
+            if let Some(visibility) = config.plant_hb_visibility {
                 unsafe {
-                    PLANT_HB_VISIBLE = plant_hb_visible;
+                    if visibility == "Never" {
+                        PLANT_HB_VISIBILITY = HealthBarVisibility::Never;
+                    } else if visibility == "Damaged" {
+                        PLANT_HB_VISIBILITY = HealthBarVisibility::Damaged;
+                    } else if visibility == "Always" {
+                        PLANT_HB_VISIBILITY = HealthBarVisibility::Always;
+                    }
                 }
             }
 
-            if let Some(zombie_hb_visible) = config.zombie_hb_visible {
+            if let Some(visibility) = config.zombie_hb_visibility {
                 unsafe {
-                    ZOMBIE_HB_VISIBLE = zombie_hb_visible;
+                    if visibility == "Never" {
+                        ZOMBIE_HB_VISIBILITY = HealthBarVisibility::Never;
+                    } else if visibility == "Damaged" {
+                        ZOMBIE_HB_VISIBILITY = HealthBarVisibility::Damaged;
+                    } else if visibility == "Always" {
+                        ZOMBIE_HB_VISIBILITY = HealthBarVisibility::Always;
+                    }
                 }
             }
+
+            unsafe { WAVE_METER_VISIBILITY = config.wave_meter_visibility.unwrap_or(true) };
 
             onboarddraw().unwrap();
         }

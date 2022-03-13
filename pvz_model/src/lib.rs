@@ -9,6 +9,8 @@ mod image;
 mod misc;
 mod sound;
 mod stub;
+mod titlescreen;
+mod particle;
 mod widget;
 
 pub use app::*;
@@ -21,4 +23,6 @@ pub use graphics::*;
 pub use image::*;
 pub use misc::*;
 pub use sound::*;
+pub use titlescreen::*;
 pub use widget::*;
+pub use particle::*;

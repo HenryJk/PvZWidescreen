@@ -1,12 +1,18 @@
 #![allow(non_snake_case)]
 
-use std::{ffi::c_void, marker::PhantomData, os::raw::c_char, ptr::NonNull};
+use std::{marker::PhantomData, os::raw::c_char, ptr::NonNull};
 
 use crate::{
-    stub::StdVector, Board, DrawVariation, GardenType, GridItemState, GridItemType, LawnMowerState,
+    stub::{StdBasicString, StdVector},
+    Board, DrawVariation, GardenType, GridItemState, GridItemType, LawnApp, LawnMowerState,
     LawnMowerType, MagnetItemType, MowerHeight, PottedPlantAge, PottedPlantNeed, ScaryPotType,
-    SeedType, ZombieType,
+    SeedType, TodCurves, ZombieType,
 };
+
+#[repr(C)]
+pub struct ButtonListener {
+    unknown: [u8; 4],
+}
 
 #[repr(C)]
 pub struct Buffer {
@@ -43,10 +49,13 @@ pub struct DataArray<T> {
     pub mName: *const c_char,
 }
 
-pub struct DataArrayIterator<'a, T: 'a> {
-    ptr: NonNull<DataArrayItem<T>>,
-    end: *const DataArrayItem<T>,
-    _marker: PhantomData<&'a T>,
+#[repr(C)]
+pub struct Font {
+    unknown: [u8; 4],
+    pub mAscent: i32,
+    pub mAscentPadding: i32,
+    pub mHeight: i32,
+    pub mLineSpacingOffset: i32,
 }
 
 #[repr(C)]
@@ -58,8 +67,8 @@ pub struct MotionTrailFrame {
 
 #[repr(C)]
 pub struct GridItem {
-    pub mApp: *const c_void,
-    pub mBoard: *const Board,
+    pub mApp: *mut LawnApp,
+    pub mBoard: *mut Board,
     pub mGridItemType: GridItemType,
     pub mGridItemState: GridItemState,
     pub mGridX: i32,
@@ -94,7 +103,7 @@ pub struct MagnetItem {
 
 #[repr(C)]
 pub struct LawnMower {
-    pub mApp: *const c_void,
+    pub mApp: *mut LawnApp,
     pub mBoard: *mut Board,
     pub mPosX: f32,
     pub mPosY: f32,
@@ -122,16 +131,16 @@ pub struct PottedPlant {
     pub mY: i32,
     pub mFacing: i32,
     unknown0: [u8; 4],
-    pub mLastWateredTime: i32,
+    pub mLastWateredTime: i64,
     pub mDrawVariation: DrawVariation,
     pub mPlantAge: PottedPlantAge,
     pub mTimesFed: i32,
     pub mFeedingsPerGrow: i32,
     pub mPlantNeed: PottedPlantNeed,
     unknown1: [u8; 4],
-    pub mLastNeedFulfilledTime: i32,
-    pub mLastFertilizedTime: i32,
-    pub mLastChocolateTime: i32,
+    pub mLastNeedFulfilledTime: i64,
+    pub mLastFertilizedTime: i64,
+    pub mLastChocolateTime: i64,
     pub mFutureAttribute: [i32; 1],
     unknown2: [u8; 4],
 }
@@ -158,6 +167,27 @@ pub struct TRect<T> {
     pub mHeight: T,
 }
 
+#[repr(C)]
+pub struct TypingCheck {
+    pub mPhrase: StdBasicString,
+    pub mRecentTyping: StdBasicString,
+}
+
+#[repr(C)]
+pub struct FloatParameterTrackNode {
+    pub mTime: f32,
+    pub mLowValue: f32,
+    pub mHighValue: f32,
+    pub mCurveType: TodCurves,
+    pub mDistribution: TodCurves,
+}
+
+#[repr(C)]
+pub struct FloatParameterTrack {
+    pub mNodes: *mut FloatParameterTrackNode,
+    pub mCountNodes: i32,
+}
+
 impl Color {
     pub fn new(hexcode: u32) -> Self {
         Color {
@@ -167,6 +197,12 @@ impl Color {
             mAlpha: (hexcode & 0xFF) as i32,
         }
     }
+}
+
+pub struct DataArrayIterator<'a, T: 'a> {
+    ptr: NonNull<DataArrayItem<T>>,
+    end: *const DataArrayItem<T>,
+    _marker: PhantomData<&'a T>,
 }
 
 impl<'a, T> Iterator for DataArrayIterator<'a, T> {
@@ -199,5 +235,75 @@ impl<'a, T> IntoIterator for &'a DataArray<T> {
             end: unsafe { self.mBlock.offset(self.mMaxUsedCount as isize) },
             _marker: PhantomData,
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::mem::size_of;
+
+    use crate::{
+        Buffer, ButtonListener, Color, Font, GridItem, LawnMower, MagnetItem, MotionTrailFrame,
+        PottedPlant, Ratio, TodSmoothArray, TypingCheck,
+    };
+
+    #[test]
+    fn check_ButtonListener_size() {
+        assert_eq!(size_of::<ButtonListener>(), 4);
+    }
+
+    #[test]
+    fn check_Buffer_size() {
+        assert_eq!(size_of::<Buffer>(), 32);
+    }
+
+    #[test]
+    fn check_Color_size() {
+        assert_eq!(size_of::<Color>(), 16);
+    }
+
+    #[test]
+    fn check_Font_size() {
+        assert_eq!(size_of::<Font>(), 20);
+    }
+
+    #[test]
+    fn check_MotionTrailFrame_size() {
+        assert_eq!(size_of::<MotionTrailFrame>(), 12);
+    }
+
+    #[test]
+    fn check_GridItem_size() {
+        assert_eq!(size_of::<GridItem>(), 232);
+    }
+
+    #[test]
+    fn check_MagnetItem_size() {
+        assert_eq!(size_of::<MagnetItem>(), 20);
+    }
+
+    #[test]
+    fn check_LawnMower_size() {
+        assert_eq!(size_of::<LawnMower>(), 68);
+    }
+
+    #[test]
+    fn check_PottedPlant_size() {
+        assert_eq!(size_of::<PottedPlant>(), 88);
+    }
+
+    #[test]
+    fn check_Ratio_size() {
+        assert_eq!(size_of::<Ratio>(), 8);
+    }
+
+    #[test]
+    fn check_TodSmoothArray_size() {
+        assert_eq!(size_of::<TodSmoothArray>(), 16);
+    }
+
+    #[test]
+    fn check_TypingCheck_size() {
+        assert_eq!(size_of::<TypingCheck>(), 56);
     }
 }

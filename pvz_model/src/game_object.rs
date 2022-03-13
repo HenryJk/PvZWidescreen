@@ -52,6 +52,7 @@ pub struct Coin {
 
 #[repr(C)]
 pub struct CursorObject {
+    pub base: GameObject,
     pub mSeedBankIndex: i32,
     pub mType: SeedType,
     pub mImitaterType: SeedType,
@@ -66,6 +67,7 @@ pub struct CursorObject {
 
 #[repr(C)]
 pub struct CursorPreview {
+    pub base: GameObject,
     pub mGridX: i32,
     pub mGridY: i32,
 }
@@ -156,6 +158,7 @@ pub struct Projectile {
 
 #[repr(C)]
 pub struct SeedBank {
+    pub base: GameObject,
     pub mNumPackets: i32,
     pub mSeedPackets: [SeedPacket; 10],
     pub mCutSceneDarken: i32,
@@ -164,6 +167,7 @@ pub struct SeedBank {
 
 #[repr(C)]
 pub struct SeedPacket {
+    pub base: GameObject,
     pub mRefreshCounter: i32,
     pub mRefreshTime: i32,
     pub mIndex: i32,
@@ -256,4 +260,68 @@ pub struct Zombie {
     pub mIsFireBall: bool,
     pub mMoweredReanimID: i32,
     pub mLastPortalX: i32,
+}
+
+impl Zombie {
+    pub fn IsDeadOrDying(&self) -> bool {
+        self.mDead
+            || self.mZombiePhase == ZombiePhase::ZombieDying
+            || self.mZombiePhase == ZombiePhase::ZombieBurned
+            || self.mZombiePhase == ZombiePhase::ZombieMowered
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::mem::size_of;
+
+    use crate::{
+        Coin, CursorObject, CursorPreview, GameObject, Plant, Projectile, SeedBank, SeedPacket,
+        Zombie,
+    };
+
+    #[test]
+    fn check_GameObject_size() {
+        assert_eq!(size_of::<GameObject>(), 36);
+    }
+
+    #[test]
+    fn check_Coin_size() {
+        assert_eq!(size_of::<Coin>(), 208);
+    }
+
+    #[test]
+    fn check_CursorObject_size() {
+        assert_eq!(size_of::<CursorObject>(), 76);
+    }
+
+    #[test]
+    fn check_CursorPreview_size() {
+        assert_eq!(size_of::<CursorPreview>(), 44);
+    }
+
+    #[test]
+    fn check_Plant_size() {
+        assert_eq!(size_of::<Plant>(), 328);
+    }
+
+    #[test]
+    fn check_Projectile_size() {
+        assert_eq!(size_of::<Projectile>(), 144);
+    }
+
+    #[test]
+    fn check_SeedBank_size() {
+        assert_eq!(size_of::<SeedBank>(), 848);
+    }
+
+    #[test]
+    fn check_SeedPacket_size() {
+        assert_eq!(size_of::<SeedPacket>(), 80);
+    }
+
+    #[test]
+    fn check_Zombie_size() {
+        assert_eq!(size_of::<Zombie>(), 344);
+    }
 }

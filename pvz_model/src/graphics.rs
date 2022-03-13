@@ -1,21 +1,22 @@
 #![allow(non_snake_case)]
 
+use core::arch::asm;
+
 use std::ffi::c_void;
 
-use crate::{stub::StdList, Color, TRect};
+use crate::{stub::StdList, Color, Image, TRect};
 
 #[repr(C)]
 pub struct Edge {
     mX: f64,
     mDX: f64,
     i: i32,
-    unknown: [u8; 4],
     b: f64,
 }
 
 #[repr(C)]
 pub struct GraphicsState {
-    pub mDestImage: *const c_void,
+    pub mDestImage: *mut Image,
     pub mTransX: f32,
     pub mTransY: f32,
     pub mScaleX: f32,
@@ -41,4 +42,36 @@ pub struct Graphics {
     pub mPFNumActiveEdges: i32,
     pub mPFNumVertices: i32,
     pub mStateStack: StdList,
+}
+
+impl Graphics {
+    #[inline]
+    pub unsafe fn DrawImage(&mut self, image: *const Image, x: i32, y: i32) {
+        asm!(
+            "pushad",
+            "push {4}",
+            "push {3}",
+            "mov ebx, {2}",
+            "mov eax, {1}",
+            "call {0}",
+            "popad",
+            in(reg) 0x587150,
+            in(reg) self,
+            in(reg) image,
+            in(reg) x,
+            in(reg) y,
+        )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::mem::size_of;
+
+    use crate::Edge;
+
+    #[test]
+    fn check_Edge_size() {
+        assert_eq!(size_of::<Edge>(), 32);
+    }
 }

@@ -1,8 +1,8 @@
 #![allow(non_snake_case)]
 
 use crate::{
-    stub::{IDirect3D7, IDirect3DDevice7, StdBasicString, StdList, StdSet},
-    DDImage, Image, Ratio, SexyAppBase, TRect, _D3DVIEWPORT7,
+    stub::{IDirect3D7, StdBasicString, StdList, StdSet},
+    DDImage, IDirect3DDevice7, Image, Ratio, SexyAppBase, TRect, _D3DVIEWPORT7,
 };
 
 use windows::Win32::{
@@ -104,4 +104,31 @@ pub struct DDInterface {
     pub mOldCursorAreaImage: *mut DDImage,
     pub mNewCursorAreaImage: *mut DDImage,
     pub mErrorString: StdBasicString,
+}
+
+#[cfg(test)]
+mod tests {
+    use std::mem::size_of;
+
+    use crate::{D3DInterface, D3DTester, DDInterface, NativeDisplay};
+
+    #[test]
+    fn check_D3DInterface_size() {
+        assert_eq!(size_of::<D3DInterface>(), 88);
+    }
+
+    #[test]
+    fn check_D3DTester_size() {
+        assert_eq!(size_of::<D3DTester>(), 0);
+    }
+
+    #[test]
+    fn check_NativeDisplay_size() {
+        assert_eq!(size_of::<NativeDisplay>(), 44);
+    }
+
+    #[test]
+    fn check_DDInterface_size() {
+        assert_eq!(size_of::<DDInterface>(), 3408);
+    }
 }
