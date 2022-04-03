@@ -7,12 +7,19 @@ edition = "2021"
 crate-type = ["dylib"]
 
 [dependencies]
-winapi = { version = "0.3.9", features = ["memoryapi", "libloaderapi"] }
+pvz = {git = "https://github.com/HenryJk/PvZLib", branch = "rust"}
 byteorder = "1.4.3"
 iced-x86 = { version = "1.16.0", features = ["code_asm"]}
-pvz = {path = "../pvz_model"}
 toml = "0.5.8"
 serde = { version = "1.0", features = ["derive"] }
+
+[dependencies.windows]
+version = "0.33.0"
+features = [
+    "Win32_System_Memory",
+    "Win32_Foundation",
+    "Win32_System_SystemServices",
+]
 
 [profile.release]
 opt-level = 3

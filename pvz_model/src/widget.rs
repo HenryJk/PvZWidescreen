@@ -2,7 +2,7 @@
 
 use crate::{
     stub::{StdBasicString, StdList, StdVector},
-    ButtonListener, Color, Font, Graphics, Image, MemoryImage, SexyAppBase, TRect,
+    ButtonListener, Color, Font, Graphics, Image, MemoryImage, SexyAppBase, TRect, DialogButton,
 };
 
 #[repr(C)]
@@ -81,6 +81,16 @@ pub struct ButtonWidget {
     pub mOverAlpha: f64,
     pub mOverAlphaSpeed: f64,
     pub mOverAlphaFadeInSpeed: f64,
+}
+
+
+#[repr(C)]
+pub struct NewLawnButton {
+    pub base: DialogButton,
+    pub mHiliteFont: *mut Font,
+    pub mTextDownOffsetX: i32,
+    pub mTextDownOffsetY: i32,
+    unknown: u32,
 }
 
 #[repr(C)]

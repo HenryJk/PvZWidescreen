@@ -1,5 +1,5 @@
 [workspace]
-members = ["mod_loader", "widescreen", "healthbar", "pvz_model"]
+members = ["mod_loader", "widescreen", "healthbar", "pvz_model", "RustVsZombies"]
 
 [profile.release]
 opt-level = 3

@@ -1,17 +1,60 @@
 #![allow(non_snake_case)]
 
-use std::{marker::PhantomData, os::raw::c_char, ptr::NonNull};
+use std::{ffi::c_void, marker::PhantomData, os::raw::c_char, ptr::NonNull};
 
 use crate::{
     stub::{StdBasicString, StdVector},
-    Board, DrawVariation, GardenType, GridItemState, GridItemType, LawnApp, LawnMowerState,
-    LawnMowerType, MagnetItemType, MowerHeight, PottedPlantAge, PottedPlantNeed, ScaryPotType,
-    SeedType, TodCurves, ZombieType,
+    AttachmentHolder, Board, DrawVariation, GardenType, GridItemState, GridItemType, Image,
+    LawnApp, LawnMowerState, LawnMowerType, MagnetItemType, MemoryImage, MowerHeight,
+    PottedPlantAge, PottedPlantNeed, ReanimationHolder, ScaryPotType, SeedType, TodCurves,
+    TodParticleHolder, TrailHolder, Widget, ZombieType,
 };
+
+pub type Undefined1 = char;
 
 #[repr(C)]
 pub struct ButtonListener {
     unknown: [u8; 4],
+}
+
+#[repr(C)]
+pub struct GameButton {
+    pub mApp: *mut LawnApp,
+    pub mParentWidget: *mut Widget,
+    pub mX: i32,
+    pub mY: i32,
+    pub mWidth: i32,
+    pub mHeight: i32,
+    pub mIsOver: bool,
+    pub mIsDown: bool,
+    pub mDisabled: bool,
+    pub mColors: [Color; 6],
+    pub mId: i32,
+    pub mLabel: [char; 28],
+    pub mLabelJustify: i32,
+    pub mFont: *mut Font,
+    pub mButtonImage: *mut Image,
+    pub mOverImage: *mut Image,
+    pub mDownImage: *mut Image,
+    pub mDisabledImage: *mut Image,
+    pub mOverOverlayImage: *mut Image,
+    pub mNormalRect: TRect<i32>,
+    pub mOverRect: TRect<i32>,
+    pub mDownRect: TRect<i32>,
+    pub mDisabledRect: TRect<i32>,
+    pub mInverted: bool,
+    pub mBtnNoDraw: bool,
+    pub mFrameNoDraw: bool,
+    unknown0: [u8; 4],
+    pub mOverAlpha: f64,
+    pub mOverAlphaSpeed: f64,
+    pub mOverAlphaFadeInSpeed: f64,
+    pub mDrawStoneButton: bool,
+    pub mTextOffsetX: i32,
+    pub mTextOffsetY: i32,
+    pub mButtonOffsetX: i32,
+    pub mButtonOffsetY: i32,
+    unknown1: [u8; 4],
 }
 
 #[repr(C)]
@@ -47,6 +90,40 @@ pub struct DataArray<T> {
     pub mSize: u32,
     pub mNextKey: u32,
     pub mName: *const c_char,
+}
+
+#[repr(C)]
+pub struct TodListNode<T> {
+    pub mValue: T,
+    pub mNext: *mut TodListNode<T>,
+    pub mPrev: *mut TodListNode<T>,
+}
+
+#[repr(C)]
+pub struct TodList<T> {
+    pub mHead: *mut TodListNode<T>,
+    pub mTail: *mut TodListNode<T>,
+    pub mSize: i32,
+    pub mpAllocator: *mut TodAllocator,
+}
+
+#[repr(C)]
+pub struct ChosenSeed {
+    pub mX: i32,
+    pub mY: i32,
+    pub mTimeStartMotion: i32,
+    pub mTimeEndMotion: i32,
+    pub mStartX: i32,
+    pub mStartY: i32,
+    pub mEndX: i32,
+    pub mEndY: i32,
+    pub mSeedType: SeedType,
+    pub mSeedState: crate::ChosenSeedState,
+    pub mSeedIndexInBank: i32,
+    pub mRefreshing: bool,
+    pub mRefreshCounter: i32,
+    pub mImitaterType: SeedType,
+    pub mCrazyDavePicked: bool,
 }
 
 #[repr(C)]
@@ -124,6 +201,14 @@ pub struct LawnMower {
 }
 
 #[repr(C)]
+pub struct PerfTimer {
+    pub mStart: i64,
+    pub mDuration: f64,
+    pub mRunning: bool,
+    unknown: [u8; 7],
+}
+
+#[repr(C)]
 pub struct PottedPlant {
     mSeedType: SeedType,
     mWhichZenGarden: GardenType,
@@ -188,6 +273,68 @@ pub struct FloatParameterTrack {
     pub mCountNodes: i32,
 }
 
+#[repr(C)]
+pub struct ToolTipWidget {
+    pub mTitle: StdBasicString,
+    pub mLabel: StdBasicString,
+    pub mWarningText: StdBasicString,
+    pub mX: i32,
+    pub mY: i32,
+    pub mWidth: i32,
+    pub mHeight: i32,
+    pub mVisible: bool,
+    pub mCenter: bool,
+    pub mMinLeft: i32,
+    pub mMaxBottom: i32,
+    pub mGetsLinesWidth: i32,
+    pub mWarningFlashCounter: i32,
+}
+
+#[repr(C)]
+pub struct EffectSystem {
+    pub mParticleHolder: *mut TodParticleHolder,
+    pub mTrailHolder: *mut TrailHolder,
+    pub mReanimationHolder: *mut ReanimationHolder,
+    pub mAttachmentHolder: *mut AttachmentHolder,
+}
+
+#[repr(C)]
+pub struct PoolEffect {
+    pub mCausticGrayscaleImage: *mut u8,
+    pub mCausticImage: *mut MemoryImage,
+    pub mApp: *mut LawnApp,
+    pub mPoolCounter: i32,
+}
+
+#[repr(C)]
+pub struct TodAllocator {
+    pub mFreeList: *mut c_void,
+    pub mBlockList: *mut c_void,
+    pub mGrowCount: i32,
+    pub mTotalItems: i32,
+    pub mItemSize: i32,
+}
+
+#[repr(C)]
+pub struct SexyVector2 {
+    pub x: f32,
+    pub y: f32,
+}
+
+#[repr(C)]
+pub struct SexyVector3 {
+    pub x: f32,
+    pub y: f32,
+    pub z: f32,
+}
+
+#[repr(C)]
+pub struct ZenGarden {
+    pub mApp: *mut LawnApp,
+    pub mBoard: *mut Board,
+    pub mGardenType: GardenType,
+}
+
 impl Color {
     pub fn new(hexcode: u32) -> Self {
         Color {
@@ -200,6 +347,12 @@ impl Color {
 }
 
 pub struct DataArrayIterator<'a, T: 'a> {
+    ptr: NonNull<DataArrayItem<T>>,
+    end: *const DataArrayItem<T>,
+    _marker: PhantomData<&'a T>,
+}
+
+pub struct DataArrayMutIterator<'a, T: 'a> {
     ptr: NonNull<DataArrayItem<T>>,
     end: *const DataArrayItem<T>,
     _marker: PhantomData<&'a T>,
@@ -225,12 +378,45 @@ impl<'a, T> Iterator for DataArrayIterator<'a, T> {
     }
 }
 
+impl<'a, T> Iterator for DataArrayMutIterator<'a, T> {
+    type Item = &'a mut T;
+
+    fn next(&mut self) -> Option<&'a mut T> {
+        while self.ptr.as_ptr() as *const DataArrayItem<T> != self.end {
+            if (unsafe { self.ptr.as_ref() }.mID & 0xFFFF0000) > 0 {
+                break;
+            }
+            self.ptr = unsafe { NonNull::new(self.ptr.as_ptr().offset(1)).unwrap() };
+        }
+        let result = if self.ptr.as_ptr() as *const DataArrayItem<T> != self.end {
+            Some(&mut unsafe { self.ptr.as_mut() }.mItem)
+        } else {
+            None
+        };
+        self.ptr = unsafe { NonNull::new(self.ptr.as_ptr().offset(1)).unwrap() };
+        result
+    }
+}
+
 impl<'a, T> IntoIterator for &'a DataArray<T> {
     type Item = &'a T;
     type IntoIter = DataArrayIterator<'a, T>;
 
     fn into_iter(self) -> Self::IntoIter {
         DataArrayIterator {
+            ptr: NonNull::new(self.mBlock).unwrap(),
+            end: unsafe { self.mBlock.offset(self.mMaxUsedCount as isize) },
+            _marker: PhantomData,
+        }
+    }
+}
+
+impl<'a, T> IntoIterator for &'a mut DataArray<T> {
+    type Item = &'a mut T;
+    type IntoIter = DataArrayMutIterator<'a, T>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        DataArrayMutIterator {
             ptr: NonNull::new(self.mBlock).unwrap(),
             end: unsafe { self.mBlock.offset(self.mMaxUsedCount as isize) },
             _marker: PhantomData,

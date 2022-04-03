@@ -1,17 +1,17 @@
-use core::arch::asm;
-
-use std::{
+#![no_std]
+use core::{
+    arch::asm,
     cmp::{max, min},
-    error::Error,
+    ffi::c_void,
 };
 
-use config::Config;
 use iced_x86::code_asm::*;
-use winapi::um::winnt::DLL_PROCESS_ATTACH;
+use windows::Win32::{Foundation::HINSTANCE, System::SystemServices::DLL_PROCESS_ATTACH};
 
 mod config;
 mod memory;
 
+use config::Config;
 use memory::inject;
 
 #[derive(PartialEq, Clone, Copy)]
@@ -214,20 +214,24 @@ unsafe fn draw_wave_meter(board: &mut pvz::Board, graphics: &mut pvz::Graphics) 
         _ => {}
     }
 
-    let zombie_head_image =
-        (*(pvz::TodParticleDefinition::get(pvz::ParticleEffect::ZombieHead).mEmitterDefs)).mImage;
+    // let zombie_head_image =
+    //     (*(pvz::TodParticleDefinition::get(pvz::ParticleEffect::ZombieHead).mEmitterDefs)).mImage;
 
-    let old_scale_x = graphics.state.mScaleX;
-    let old_scale_y = graphics.state.mScaleY;
-    graphics.state.mScaleX = 0.5 * old_scale_x;
-    graphics.state.mScaleY = 0.5 * old_scale_y;
-    graphics.DrawImage(
-        zombie_head_image,
-        1700 + board.base.base.mX,
-        700 + board.base.base.mY,
-    );
-    graphics.state.mScaleX = old_scale_x;
-    graphics.state.mScaleY = old_scale_y;
+    let flag_meter_part = *(0x6A75C0 as *const *mut pvz::Image);
+
+    // let zombie_head_image = *(0x6A74E8 as *const *mut pvz::Image);
+
+    // let old_scale_x = graphics.state.mScaleX;
+    // let old_scale_y = graphics.state.mScaleY;
+    // graphics.PushState();
+    // graphics.state.mScaleX *= 0.5;
+    // graphics.state.mScaleY *= 0.5;
+    // graphics.state.mTransX += board.base.base.mX as f32;
+    // graphics.state.mTransY += board.base.base.mY as f32;
+    // graphics.DrawImage(zombie_head_image, 1700, 700);
+    // graphics.PopState();
+
+    graphics.DrawImageCel(flag_meter_part, 853, 352, 0);
 
     let meter_height: i32;
     let meter_color: pvz::Color;
@@ -281,7 +285,7 @@ unsafe extern "cdecl" fn draw_all_health_bar(board: *mut pvz::Board, graphics: *
     }
 }
 
-fn onboarddraw() -> Result<(), Box<dyn Error>> {
+fn onboarddraw() -> Result<(), IcedError> {
     let mut code = CodeAssembler::new(32)?;
     code.pushad()?;
     code.push(dword_ptr(esp + 40))?;
@@ -298,9 +302,9 @@ fn onboarddraw() -> Result<(), Box<dyn Error>> {
 #[no_mangle] // call it "DllMain" in the compiled DLL
 #[allow(unused_variables)]
 pub extern "stdcall" fn DllMain(
-    hinst_dll: winapi::shared::minwindef::HINSTANCE,
-    fdw_reason: winapi::shared::minwindef::DWORD,
-    lpv_reserved: winapi::shared::minwindef::LPVOID,
+    hinst_dll: HINSTANCE,
+    fdw_reason: u32,
+    lpv_reserved: *mut c_void,
 ) -> i32 {
     match fdw_reason {
         DLL_PROCESS_ATTACH => {

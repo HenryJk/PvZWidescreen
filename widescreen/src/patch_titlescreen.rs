@@ -6,7 +6,7 @@ use iced_x86::code_asm::*;
 use winapi::um::winnt::PAGE_READWRITE;
 
 use crate::{
-    memory::{change_permission, inject, patch},
+    memory::{change_permission, inject, patch, alloc_mem},
     PAD,
 };
 
@@ -34,7 +34,9 @@ pub(crate) unsafe fn patch_titlescreen() -> Result<(), Box<dyn Error>> {
     patch(0x48DECA, &transmute::<i16, [u8; 2]>(240 + PAD));
 
     // Move IMAGE_PLANT_SHADOW to 2000.0 (TitleScreen::Draw)
-    patch(0x6794B4, &transmute::<f32, [u8; 4]>(2000.0));
+    let fptr = alloc_mem(4, PAGE_READWRITE) as u32;
+    patch(fptr, &transmute::<f32, [u8; 4]>(2000.0));
+    patch(0x48DABC, &transmute::<u32, [u8; 4]>(fptr));
 
     // Move IMAGE_SODROLL_CAP by PAD (TitleScreen::Draw)
     change_permission(0x6799B0, 8, PAGE_READWRITE);

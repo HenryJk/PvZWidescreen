@@ -1,0 +1,119 @@
+    if !(*board.mSeedBank).mSeedPackets[PUFFSHROOM_INDEX].mRefreshing
+        || !(*board.mSeedBank).mSeedPackets[NUFFSHROOM_INDEX].mRefreshing
+    {
+        let mut buffer_health = [0; 4];
+        for plant in &board.mPlants {
+            if !plant.mSquished && !plant.mDead && plant.mPlantCol == 6 {
+                if [0, 1, 4, 5].into_iter().any(|x| x == plant.base.mRow) {
+                    let idx = if plant.base.mRow > 1 {
+                        plant.base.mRow - 2
+                    } else {
+                        plant.base.mRow
+                    };
+                    buffer_health[idx as usize] =
+                        if matches!(plant.mSeedType, pvz::SeedType::Imitater) {
+                            300
+                        } else {
+                            plant.mPlantHealth
+                        };
+                }
+            }
+        }
+
+        let mut ready_puffs = Vec::new();
+        for i in [PUFFSHROOM_INDEX, NUFFSHROOM_INDEX] {
+            if !(*board.mSeedBank).mSeedPackets[i].mRefreshing {
+                ready_puffs.push(i as i32);
+            }
+        }
+
+        let mut puff_idx = 0;
+
+        if !buffer_health.into_iter().all(|x| x > 0) {
+            let mut garg_x = [(f32::MAX, 0), (f32::MAX, 1), (f32::MAX, 2), (f32::MAX, 3)];
+            for zombie in &board.mZombies {
+                if !matches!(zombie.mZombieType, pvz::ZombieType::RedeyeGargantuar)
+                    || zombie.mDead
+                    || !zombie.mHasHead
+                    || zombie.mBodyHealth <= 0
+                {
+                    continue;
+                }
+                let mut idx = zombie.base.mRow as usize;
+                if idx > 3 {
+                    idx -= 2;
+                }
+                garg_x[idx].0 = garg_x[idx].0.min(zombie.mPosX);
+            }
+            garg_x.sort_unstable_by(|a, b| a.0.partial_cmp(&b.0).unwrap_or(Equal));
+
+            for (_x, idx) in garg_x {
+                if puff_idx >= ready_puffs.len() {
+                    break;
+                }
+                if buffer_health[idx as usize] == 0 {
+                    board.MouseDown(0, 0, -1);
+                    board.MouseDown(seed_bank_x(ready_puffs[puff_idx]), 43, 1);
+                    board.MouseDown(560, 142 + 85 * if idx > 1 { idx + 2 } else { idx }, 1);
+                    buffer_health[idx as usize] = 300;
+                    puff_idx += 1;
+                }
+            }
+        }
+
+        let mut sorted_buffer_health = [(0, 0), (0, 1), (0, 4), (0, 5)];
+        for i in 0..buffer_health.len() {
+            sorted_buffer_health[i].0 = buffer_health[i];
+        }
+        sorted_buffer_health.sort_unstable();
+        for (health, row) in sorted_buffer_health {
+            if health == 300 || puff_idx >= ready_puffs.len() {
+                break;
+            }
+            board.MouseDown(0, 0, -1);
+            board.MouseDown(seed_bank_x(10), 43, 1);
+            board.MouseDown(560, 142 + 85 * row, 1);
+            board.MouseDown(seed_bank_x(ready_puffs[puff_idx]), 43, 1);
+            board.MouseDown(560, 142 + 85 * row, 1);
+            puff_idx += 1;
+        }
+    }
+
+
+
+
+
+    if !(*board.mSeedBank).mSeedPackets[SPIKEWEED_INDEX].mRefreshing
+        && !(*board.mSeedBank).mSeedPackets[SPIKEROCK_INDEX].mRefreshing
+        && MODIFIED
+    {
+        // println!("SPIKEROCK READY");
+        let mut buffer_health = [(0, 0), (0, 1), (0, 4), (0, 5)];
+        for plant in &board.mPlants {
+            if !plant.mSquished && !plant.mDead && plant.mPlantCol == 6 {
+                if [0, 1, 4, 5].into_iter().any(|x| x == plant.base.mRow) {
+                    let idx = if plant.base.mRow > 1 {
+                        plant.base.mRow - 2
+                    } else {
+                        plant.base.mRow
+                    };
+                    buffer_health[idx as usize].0 = plant.mPlantHealth
+                }
+            }
+        }
+
+        buffer_health.sort_unstable();
+        let (health, row) = buffer_health[0];
+        // println!("{} {}", health, board.mSunMoney);
+        if health < 450 * board.mSunMoney / 9990 {
+            // println!("replacing spikerock row {} at {} hp", row, health);
+            board.MouseDown(0, 0, -1);
+            board.MouseDown(seed_bank_x(10), 43, 1);
+            board.MouseDown(560, 142 + 85 * row, 1);
+            board.MouseDown(0, 0, -1);
+            board.MouseDown(seed_bank_x(SPIKEWEED_INDEX as i32), 43, 1);
+            board.MouseDown(560, 142 + 85 * row, 1);
+            board.MouseDown(seed_bank_x(SPIKEROCK_INDEX as i32), 43, 1);
+            board.MouseDown(560, 142 + 85 * row, 1);
+        }
+    }

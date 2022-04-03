@@ -1103,6 +1103,7 @@ pub enum ScaryPotType {
     Sun = 3,
 }
 
+#[derive(Debug, Clone, Copy)]
 #[repr(i32)]
 pub enum SeedType {
     Peashooter = 0,
@@ -1395,6 +1396,7 @@ pub enum ZombiePhase {
     SquashDoneFalling = 95,
 }
 
+#[derive(Copy, Clone, Debug)]
 #[repr(i32)]
 pub enum ZombieType {
     Normal = 0,

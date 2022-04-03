@@ -1,8 +1,8 @@
 #![allow(non_snake_case)]
 
 use crate::{
-    EmitterType, FloatParameterTrack, Image, ParticleEffect, ParticleFieldType,
-    G_PARTICLE_DEF_ARRAY,
+    Color, DataArray, EmitterType, FloatParameterTrack, Image, ParticleEffect, ParticleFieldType,
+    SexyVector2, TodAllocator, TodList, G_PARTICLE_DEF_ARRAY,
 };
 
 #[repr(C)]
@@ -71,6 +71,70 @@ pub struct TodEmitterDefinition {
 pub struct TodParticleDefinition {
     pub mEmitterDefs: *const TodEmitterDefinition,
     pub mEmitterDefCount: i32,
+}
+
+#[repr(C)]
+pub struct TodParticleSystem {
+    pub mEffectType: ParticleEffect,
+    pub mParticleDef: *mut TodParticleDefinition,
+    pub mParticleHolder: *mut TodParticleHolder,
+    pub mEmitterList: TodList<i32>,
+    pub mDead: bool,
+    pub mIsAttachment: bool,
+    pub mRenderOrder: i32,
+    pub mDontUpdate: bool,
+}
+
+#[repr(C)]
+pub struct TodParticleEmitter {
+    pub mEmitterDef: *mut TodEmitterDefinition,
+    pub mParticleSystem: *mut TodParticleSystem,
+    pub mParticleList: TodList<i32>,
+    pub mSpawnAccum: f32,
+    pub mSystemCenter: SexyVector2,
+    pub mParticlesSpawned: i32,
+    pub mSystemAge: i32,
+    pub mSystemDuration: i32,
+    pub mSystemTimeValue: f32,
+    pub mSystemLastTimeValue: f32,
+    pub mDead: bool,
+    pub mColorOverride: Color,
+    pub mExtraAdditiveDrawOverride: bool,
+    pub mScaleOverride: f32,
+    pub mImageOverride: *mut Image,
+    pub mCrossFadeEmitterID: i32,
+    pub mEmitterCrossFadeCountDown: i32,
+    pub mFrameOverride: i32,
+    pub mTrackInterp: [f32; 10],
+    pub mSystemFieldInterp: [[f32; 2]; 4],
+}
+
+#[repr(C)]
+pub struct TodParticle {
+    pub mParticleEmitter: *mut TodParticleEmitter,
+    pub mParticleDuration: i32,
+    pub mParticleAge: i32,
+    pub mParticleTimeValue: f32,
+    pub mParticleLastTimeValue: f32,
+    pub mAnimationTimeValue: f32,
+    pub mVelocity: SexyVector2,
+    pub mPosition: SexyVector2,
+    pub mImageFrame: i32,
+    pub mSpinPosition: f32,
+    pub mSpinVelocity: f32,
+    pub mCrossFadeParticleID: i32,
+    pub mCrossFadeDuration: i32,
+    pub mParticleInterp: [f32; 16],
+    pub mParticleFieldInterp: [[f32; 2]; 4],
+}
+
+#[repr(C)]
+pub struct TodParticleHolder {
+    pub mParticleSystems: DataArray<TodParticleSystem>,
+    pub mEmitters: DataArray<TodParticleEmitter>,
+    pub mParticles: DataArray<TodParticle>,
+    pub mParticleListNodeAllocator: TodAllocator,
+    pub mEmitterListNodeAllocator: TodAllocator,
 }
 
 impl TodParticleDefinition {

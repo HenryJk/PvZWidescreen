@@ -3,9 +3,10 @@ use core::intrinsics::transmute;
 use std::error::Error;
 
 use iced_x86::code_asm::*;
+use winapi::um::winnt::PAGE_READWRITE;
 
 use crate::{
-    memory::{inject, patch},
+    memory::{inject, patch, alloc_mem},
     PAD,
 };
 
@@ -47,6 +48,11 @@ pub(crate) unsafe fn patch_zengarden() -> Result<(), Box<dyn Error>> {
     code.call(0x587150)?;
     code.jmp(0x4164A9)?;
     inject(0x4164A4, code);
+
+    // Draw Tree of Wisdom height text at 400 + PAD (Challenge::TreeOfWisdomDraw)
+    let fptr = alloc_mem(8, PAGE_READWRITE) as u32;
+    patch(fptr, &transmute::<f64, [u8; 8]>(400.0 + PAD as f64));
+    patch(0x42CE65, &transmute::<u32, [u8; 4]>(fptr));
 
     Ok(())
 }

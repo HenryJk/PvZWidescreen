@@ -38,7 +38,7 @@ pub struct GraphicsState {
 pub struct Graphics {
     unknown: [u8; 4],
     pub state: GraphicsState,
-    pub mPFActiveEdgeList: *const Edge,
+    pub mPFActiveEdgeList: *mut Edge,
     pub mPFNumActiveEdges: i32,
     pub mPFNumVertices: i32,
     pub mStateStack: StdList,
@@ -60,6 +60,50 @@ impl Graphics {
             in(reg) image,
             in(reg) x,
             in(reg) y,
+        )
+    }
+
+    #[inline]
+    pub unsafe fn PushState(&mut self) {
+        asm!(
+            "pushad",
+            "push {1}",
+            "call {0}",
+            "popad",
+            in(reg) 0x586B40,
+            in(reg) self,
+        )
+    }
+
+    #[inline]
+    pub unsafe fn PopState(&mut self) {
+        asm!(
+            "pushad",
+            "mov edi, {1}",
+            "call {0}",
+            "popad",
+            in(reg) 0x586BD0,
+            in(reg) self,
+        )
+    }
+
+    #[inline]
+    pub unsafe fn DrawImageCel(&mut self, image: *const Image, x: i32, y: i32, cel: i32) {
+        asm!(
+            "pushad",
+            "push {3}",
+            "push {2}",
+            "push {0}",
+            "mov ecx, {1}",
+            "mov eax, {4}",
+            "mov edx, 0x587E50",
+            "call edx",
+            "popad",
+            in(reg) self,
+            in(reg) image,
+            in(reg) x,
+            in(reg) y,
+            in(reg) cel,
         )
     }
 }

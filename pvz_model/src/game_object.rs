@@ -1,16 +1,16 @@
 #![allow(non_snake_case)]
 
-use std::ffi::c_void;
+use core::arch::asm;
 
 use crate::{
-    Board, CoinMotion, CoinType, CursorType, HelmType, MagnetItem, PlantState, PlantSubClass,
-    PottedPlant, ProjectileMotion, ProjectileType, SeedType, TRect, ZombieHeight, ZombiePhase,
-    ZombieType,
+    Board, CoinMotion, CoinType, CursorType, HelmType, LawnApp, MagnetItem, PlantState,
+    PlantSubClass, PottedPlant, ProjectileMotion, ProjectileType, SeedType, TRect, ZombieHeight,
+    ZombiePhase, ZombieType,
 };
 
 #[repr(C)]
 pub struct GameObject {
-    pub mApp: *mut c_void,
+    pub mApp: *mut LawnApp,
     pub mBoard: *mut Board,
     pub mX: i32,
     pub mY: i32,
@@ -201,7 +201,7 @@ pub struct Zombie {
     pub mJustGotShotCounter: i32,
     pub mShieldJustGotShotCounter: i32,
     pub mShieldRecoilCounter: i32,
-    pub mZombieAg: i32,
+    pub mZombieAge: i32,
     pub mZombieHeight: ZombieHeight,
     pub mPhaseCounter: i32,
     pub mFromWave: i32,
@@ -260,6 +260,23 @@ pub struct Zombie {
     pub mIsFireBall: bool,
     pub mMoweredReanimID: i32,
     pub mLastPortalX: i32,
+}
+
+impl Plant {
+    pub unsafe fn CobCannonFire(&mut self, x: i32, y: i32) {
+        asm!(
+            "pushad",
+            "push {3}",
+            "push {2}",
+            "mov eax, {1}",
+            "call {0}",
+            "popad",
+            in(reg) 0x466D50,
+            in(reg) self,
+            in(reg) x,
+            in(reg) y
+        )
+    }
 }
 
 impl Zombie {

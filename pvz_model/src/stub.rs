@@ -1,40 +1,35 @@
 #![allow(non_snake_case)]
 
+use core::ffi::c_void;
+
 #[repr(C)]
 pub struct IDirect3D7 {
-    unknown: [u8; 4],
+    unknown: *const c_void,
 }
-
-
 
 #[repr(C)]
 pub struct StdBasicString {
-    unknown: [u8; 28],
+    unknown: [u32; 7],
 }
 
 #[repr(C)]
 pub struct StdVector {
-    unknown: [u8; 16],
+    unknown: [u32; 4],
 }
 
 #[repr(C)]
 pub struct StdMap {
-    unknown: [u8; 12],
+    unknown: [u32; 3],
 }
 
 #[repr(C)]
 pub struct StdList {
-    unknown: [u8; 12],
+    unknown: [u32; 3],
 }
 
 #[repr(C)]
 pub struct StdSet {
-    unknown: [u8; 12],
-}
-
-#[repr(C)]
-pub struct ResourceManager {
-    unknown: [u8; 204],
+    unknown: [u32; 3],
 }
 
 #[repr(C)]
@@ -44,45 +39,6 @@ pub struct InternetManager {}
 pub struct BetaSupport {
     unknown: [u8; 592],
 }
-
-#[repr(C)]
-pub struct GameSelector {
-    unknown: [u8; 300],
-}
-
-#[repr(C)]
-pub struct SeedChooserScreen {
-    unknown: [u8; 3392],
-}
-
-#[repr(C)]
-pub struct AwardScreen {
-    unknown: [u8; 156],
-}
-
-#[repr(C)]
-pub struct CreditScreen {
-    unknown: [u8; 248],
-}
-
-#[repr(C)]
-pub struct ChallengeScreen {
-    unknown: [u8; 476],
-}
-
-#[repr(C)]
-pub struct TodFoley {
-    unknown: [u8; 18040],
-}
-
-#[repr(C)]
-pub struct PoolEffect {}
-
-#[repr(C)]
-pub struct ZenGarden {}
-
-#[repr(C)]
-pub struct EffectSystem {}
 
 #[repr(C)]
 pub struct ReanimatorCache {}

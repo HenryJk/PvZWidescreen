@@ -1,11 +1,11 @@
 #![allow(non_snake_case)]
 
-use std::ffi::c_void;
+use core::{arch::asm, ffi::c_void};
 
 use crate::{
-    AdviceType, BackgroundType, BoardResult, Coin, CursorObject, CursorPreview, DataArray,
-    DebugTextMode, GridItem, GridSquareType, LawnApp, LawnMower, Plant, PlantRowType, Projectile,
-    TodSmoothArray, TutorialState, Widget, Zombie, ZombieType,
+    AdviceType, BackgroundType, BoardResult, Challenge, Coin, CursorObject, CursorPreview,
+    CutScene, DataArray, DebugTextMode, GridItem, GridSquareType, LawnApp, LawnMower, Plant,
+    PlantRowType, Projectile, SeedBank, TodSmoothArray, TutorialState, Widget, Zombie, ZombieType,
 };
 
 #[repr(C)]
@@ -22,14 +22,14 @@ pub struct Board {
     pub mCursorObject: *mut CursorObject,
     pub mCursorPreview: *mut CursorPreview,
     pub mAdvice: *const c_void,
-    pub mSeedBank: *const c_void,
+    pub mSeedBank: *mut SeedBank,
     pub mMenuButton: *const c_void,
     pub mStoreButton: *const c_void,
     pub mIgnoreMouseUp: bool,
     pub mToolTip: *const c_void,
     pub mDebugFont: *const c_void,
-    pub mCutScene: *const c_void,
-    pub mChallenge: *const c_void,
+    pub mCutScene: *mut CutScene,
+    pub mChallenge: *mut Challenge,
     pub mPaused: bool,
     pub mGridSquareType: [[GridSquareType; 6]; 9],
     pub mGridCelLook: [[i32; 6]; 9],
@@ -130,24 +130,54 @@ pub struct Board {
 
 impl Board {
     pub fn TotalZombiesHealthInWave(&self, wave: i32) -> i32 {
-        self.mZombies
-            .into_iter()
-            .map(|zombie| {
-                if zombie.mFromWave == wave
-                    && !zombie.mMindControlled
-                    && !zombie.IsDeadOrDying()
-                    && !matches!(zombie.mZombieType, ZombieType::Bungee)
-                    && zombie.mRelatedZombieID == 0
-                {
-                    zombie.mBodyHealth
-                        + zombie.mHelmHealth
-                        + (zombie.mShieldHealth + 2) / 5
-                        + zombie.mFlyingHealth
-                } else {
-                    0
-                }
-            })
-            .sum()
+        let mut total = 0;
+        for zombie in &self.mZombies {
+            if zombie.mFromWave != wave
+                || zombie.mMindControlled
+                || zombie.IsDeadOrDying()
+                || matches!(zombie.mZombieType, ZombieType::Bungee)
+                || zombie.mRelatedZombieID != 0
+            {
+                continue;
+            }
+            total += zombie.mBodyHealth
+                + zombie.mHelmHealth
+                + (zombie.mShieldHealth + 2) / 5
+                + zombie.mFlyingHealth
+        }
+        total
+    }
+
+    // button list:
+    //  1 = WM_LBUTTONDOWN
+    // -1 = WM_RBUTTONDOWN
+    //  3 = WM_MBUTTONDOWN
+    //  2 = WM_LBUTTONDBLCLK
+    // -2 = WM_RBUTTONDBLCLK
+    pub unsafe fn MouseDown(&mut self, x: i32, y: i32, button: i32) {
+        asm!(
+            "pushad",
+            "push {4}",
+            "push {3}",
+            "push {2}",
+            "mov ecx, {1}",
+            "call {0}",
+            "popad",
+            in(reg) 0x411F20,
+            in(reg) self,
+            in(reg) x,
+            in(reg) y,
+            in(reg) button,
+        )
+    }
+
+    pub unsafe fn PickZombieWaves(&mut self) {
+        asm!(
+            "mov edi, {1}",
+            "call {0}",
+            in(reg) 0x4092E0,
+            in(reg) self,
+        )
     }
 }
 

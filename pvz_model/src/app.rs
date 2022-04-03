@@ -8,13 +8,13 @@ use windows::Win32::{
 
 use crate::{
     stub::{
-        AwardScreen, BetaSupport, ChallengeScreen, CreditScreen, EffectSystem, GameSelector,
-        InternetManager, LevelStats, Music, PlayerInfo, PoolEffect, PopDRMComm, ProfileMgr,
-        ReanimatorCache, ResourceManager, SeedChooserScreen, StdBasicString, StdList, StdMap,
-        StdSet, TodFoley, ZenGarden,
+        BetaSupport, InternetManager, LevelStats, Music, PlayerInfo, PopDRMComm, ProfileMgr,
+        ReanimatorCache, StdBasicString, StdList, StdMap, StdSet,
     },
-    Board, BoardResult, Buffer, CrazyDaveState, DDInterface, GameMode, GameScenes, MusicInterface,
-    Ratio, SoundManager, TRect, TitleScreen, TypingCheck, WidgetManager,
+    AwardScreen, Board, BoardResult, Buffer, ChallengeScreen, CrazyDaveState, CreditScreen,
+    DDInterface, EffectSystem, GameMode, GameScenes, GameSelector, MusicInterface, PoolEffect,
+    Ratio, ResourceManager, SeedChooserScreen, SoundManager, TRect, TitleScreen, TodFoley,
+    TypingCheck, WidgetManager, ZenGarden,
 };
 
 #[repr(C)]

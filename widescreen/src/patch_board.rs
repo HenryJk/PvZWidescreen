@@ -55,7 +55,7 @@ pub(crate) unsafe fn patch_board() -> Result<(), Box<dyn Error>> {
     code.sar(eax, 1)?;
     code.mov(dword_ptr(POLE_PTR + 0x4), eax)?;
     code.mov(dword_ptr(POLE_NIGHT_PTR + 0x4), eax)?;
-    code.mov(eax, dword_ptr(edi + 0xa4))?;
+    code.mov(eax, dword_ptr(edi + 0xA4))?;
     code.jmp(0x43B93F)?;
     inject(0x43B939, code);
 
@@ -348,7 +348,7 @@ pub(crate) unsafe fn patch_board() -> Result<(), Box<dyn Error>> {
     inject(0x4393EA, code);
 
     // Move Bobsled on SeedChooserScreen PAD to the right (CutScene::PlaceAZombie)
-    patch(0x67A158, &transmute::<f32, [u8; 4]>(1105.0 + PAD as f32));
+    // patch(0x67A158, &transmute::<f32, [u8; 4]>(1105.0 + PAD as f32));
 
     // Move Bungee in SeedChooserScreen to top right corner (CutScene::PlaceAZombie)
     const BUNGEE_X: f32 = 1250.0;
@@ -377,6 +377,27 @@ pub(crate) unsafe fn patch_board() -> Result<(), Box<dyn Error>> {
 
     // Make winning fullscreen flash 800 + 2 * PAD wide (RenderParticle)
     patch(0x51813E, &transmute::<i16, [u8; 2]>(800 + 2 * PAD));
+
+    // Make coffee bean highlight correct (Board::UpdateMousePosition)
+    let mut code = CodeAssembler::new(32)?;
+    code.sub(dword_ptr(esp), PAD as i32)?;
+    code.call(0x41C2D0)?;
+    code.jmp(0x40EC9D)?;
+    inject(0x40EC98, code);
+
+    // Make wallnut and tallnut highlight correct (Board::UpdateMousePosition)
+    let mut code = CodeAssembler::new(32)?;
+    code.sub(dword_ptr(esp), PAD as i32)?;
+    code.call(0x41C2D0)?;
+    code.jmp(0x40EE56)?;
+    inject(0x40EE51, code);
+
+    // Make pumpkin highlight correct (Board::UpdateMousePosition)
+    let mut code = CodeAssembler::new(32)?;
+    code.sub(dword_ptr(esp), PAD as i32)?;
+    code.call(0x41C2D0)?;
+    code.jmp(0x40ED8A)?;
+    inject(0x40ED85, code);
 
     Ok(())
 }

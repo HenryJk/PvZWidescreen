@@ -1,38 +1,32 @@
-use core::ptr::null_mut;
+#![allow(dead_code)]
 
-use byteorder::{ByteOrder, LE};
-use iced_x86::code_asm::CodeAssembler;
-use winapi::{
-    ctypes::c_void,
-    um::{
-        memoryapi::{VirtualAlloc, VirtualProtect, WriteProcessMemory},
-        processthreadsapi::GetCurrentProcess,
-        winnt::{MEM_COMMIT, PAGE_EXECUTE_READWRITE},
-    },
+use core::{
+    ffi::c_void,
+    mem::zeroed,
+    ptr::{copy, null_mut},
 };
 
-pub(crate) unsafe fn alloc_mem(size: usize, permission: u32) -> *mut c_void {
+use iced_x86::code_asm::CodeAssembler;
+use windows::Win32::System::Memory::{
+    VirtualAlloc, VirtualProtect, MEM_COMMIT, PAGE_EXECUTE_READWRITE, PAGE_PROTECTION_FLAGS,
+};
+
+pub(crate) unsafe fn alloc_mem(size: usize, permission: PAGE_PROTECTION_FLAGS) -> *mut c_void {
     VirtualAlloc(null_mut(), size, MEM_COMMIT, permission)
 }
 
-pub(crate) unsafe fn change_permission(address: u32, size: usize, permission: u32) {
-    let mut old_perm = 0u32;
-    VirtualProtect(
-        address as *mut c_void,
-        size,
-        permission,
-        &mut old_perm as *mut u32,
-    );
+pub(crate) unsafe fn change_permission(
+    address: u32,
+    size: usize,
+    permission: PAGE_PROTECTION_FLAGS,
+) {
+    let mut old_perm: PAGE_PROTECTION_FLAGS = zeroed();
+    VirtualProtect(address as *const c_void, size, permission, &mut old_perm);
 }
 
 pub(crate) unsafe fn patch(address: u32, buf: &[u8]) {
-    WriteProcessMemory(
-        GetCurrentProcess(),
-        address as *mut c_void,
-        buf.as_ptr() as *const c_void,
-        buf.len(),
-        null_mut(),
-    );
+    change_permission(address, buf.len(), PAGE_EXECUTE_READWRITE);
+    copy(buf.as_ptr(), address as *mut u8, buf.len());
 }
 
 pub(crate) unsafe fn inject(address: u32, mut code: CodeAssembler) {
@@ -40,25 +34,11 @@ pub(crate) unsafe fn inject(address: u32, mut code: CodeAssembler) {
     let exec_mem_address = alloc_mem(code_length + 5, PAGE_EXECUTE_READWRITE);
 
     let buf = code.assemble(exec_mem_address as u64).unwrap();
-    WriteProcessMemory(
-        GetCurrentProcess(),
-        exec_mem_address,
-        buf.as_ptr() as *const c_void,
-        buf.len(),
-        null_mut(),
-    );
+    patch(exec_mem_address as u32, &buf);
 
-    let mut patch = [0u8; 5];
-    patch[0] = 0xE9;
-    LE::write_i32(
-        &mut patch[1..],
-        exec_mem_address as i32 - (address as i32 + 5),
-    );
-    WriteProcessMemory(
-        GetCurrentProcess(),
-        address as *mut c_void,
-        patch.as_ptr() as *const c_void,
-        patch.len(),
-        null_mut(),
-    );
+    let mut code = CodeAssembler::new(32).unwrap();
+    code.jmp(exec_mem_address as u64).unwrap();
+
+    let buf = code.assemble(address as u64).unwrap();
+    patch(address, &buf);
 }

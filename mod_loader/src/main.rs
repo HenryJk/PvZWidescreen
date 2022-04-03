@@ -24,7 +24,7 @@ use winapi::{
             CreateProcessW, GetThreadContext, ResumeThread, SuspendThread, PROCESS_INFORMATION,
             STARTUPINFOW,
         },
-        winbase::{CREATE_NO_WINDOW, CREATE_SUSPENDED},
+        winbase::{CREATE_NO_WINDOW, CREATE_SUSPENDED, STARTF_USESTDHANDLES},
         winnt::{CONTEXT, CONTEXT_CONTROL},
     },
 };
@@ -42,6 +42,7 @@ fn main() {
     sinfo.hStdInput = stdin().as_raw_handle() as *mut c_void;
     sinfo.hStdOutput = stdout().as_raw_handle() as *mut c_void;
     sinfo.hStdError = stderr().as_raw_handle() as *mut c_void;
+    sinfo.dwFlags = STARTF_USESTDHANDLES;
     let mut pinfo: PROCESS_INFORMATION = unsafe { mem::zeroed() };
     let appname = &config
         .executable
@@ -54,7 +55,7 @@ fn main() {
             null_mut(),
             null_mut(),
             null_mut(),
-            false as i32,
+            true as i32,
             creation_flags,
             null_mut(),
             null(),
